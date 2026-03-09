@@ -158,11 +158,11 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
 
   return (
     <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
-      <div className="px-4 py-3 border-b border-fb-divider flex items-center justify-between">
-        <h2 className="text-base font-bold text-fb-text">Jobs & Tasks</h2>
+      <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-fb-divider flex items-center justify-between">
+        <h2 className="text-sm sm:text-base font-bold text-fb-text">Jobs & Tasks</h2>
         <button
           onClick={() => setShowCreateJob(!showCreateJob)}
-          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors"
+          className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 text-xs font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors"
         >
           <PlusIcon /> New Job
         </button>
@@ -170,8 +170,8 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
 
       {/* Create Job Form */}
       {showCreateJob && (
-        <div className="p-4 border-b border-fb-divider bg-fb-bg">
-          <form onSubmit={handleCreateJob} className="space-y-3">
+        <div className="p-3 sm:p-4 border-b border-fb-divider bg-fb-bg">
+          <form onSubmit={handleCreateJob} className="space-y-2.5 sm:space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Job Name *</label>
@@ -272,18 +272,18 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
             return (
               <div key={job.id}>
                 <div
-                  className="px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-fb-hover-bg transition-colors"
+                  className="px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-3 cursor-pointer hover:bg-fb-hover-bg transition-colors"
                   onClick={() => setExpandedJobId(isExpanded ? null : job.id)}
                 >
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: job.color }} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-fb-text truncate">{job.name}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {job.client && <span className="text-xs text-fb-text-secondary">{job.client}</span>}
+                    <p className="text-xs sm:text-sm font-semibold text-fb-text truncate">{job.name}</p>
+                    <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5">
+                      {job.client && <span className="text-[10px] sm:text-xs text-fb-text-secondary truncate max-w-[80px] sm:max-w-none">{job.client}</span>}
                       {job.hourlyRate > 0 && (
-                        <span className="text-xs font-semibold text-fb-green">${job.hourlyRate.toFixed(2)}/hr</span>
+                        <span className="text-[10px] sm:text-xs font-semibold text-fb-green">${job.hourlyRate.toFixed(2)}/hr</span>
                       )}
-                      <span className="text-xs text-fb-text-tertiary">
+                      <span className="text-[10px] sm:text-xs text-fb-text-tertiary">
                         {completedTasks}/{job.tasks.length} tasks
                       </span>
                     </div>
@@ -292,7 +292,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                 </div>
 
                 {isExpanded && (
-                  <div className="px-4 pb-4 bg-fb-bg/50">
+                  <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-fb-bg/50">
                     {job.description && (
                       <p className="text-xs text-fb-text-secondary mb-3 px-1">{job.description}</p>
                     )}

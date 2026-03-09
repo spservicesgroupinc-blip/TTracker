@@ -111,23 +111,23 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
 
   return (
     <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
-      <div className="px-4 py-3 border-b border-fb-divider">
+      <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-fb-divider">
         <div className="flex items-center gap-2">
-          <h2 className="text-base font-bold text-fb-text">Premium Pay Report</h2>
+          <h2 className="text-sm sm:text-base font-bold text-fb-text">Premium Pay Report</h2>
           <span className="px-2 py-0.5 text-[10px] font-bold text-white bg-gradient-to-r from-purple-500 to-fb-blue rounded-full uppercase tracking-wider">Pro</span>
         </div>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
         {/* Period Selector */}
         <div>
           <label className="block text-xs font-semibold text-fb-text-secondary mb-1.5 uppercase tracking-wide">Report Period</label>
-          <div className="grid grid-cols-4 gap-1 p-1 bg-fb-bg rounded-lg">
+          <div className="grid grid-cols-4 gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-fb-bg rounded-lg">
             {(['weekly', 'biweekly', 'monthly', 'custom'] as const).map(type => (
               <button
                 key={type}
                 onClick={() => setPeriodType(type)}
-                className={`py-2 text-xs font-semibold rounded-md transition-all ${
+                className={`py-1.5 sm:py-2 text-[10px] sm:text-xs font-semibold rounded-md transition-all ${
                   periodType === type ? 'bg-white text-fb-blue shadow-sm' : 'text-fb-text-secondary hover:text-fb-text'
                 }`}
               >

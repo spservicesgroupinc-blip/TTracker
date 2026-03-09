@@ -64,7 +64,8 @@ const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'clock' | 'jobs' | 'report'>('clock');
     const [clockNotes, setClockNotes] = useState('');
     const [clockPhotos, setClockPhotos] = useState<Photo[]>([]);
-    const [showFabMenu, setShowFabMenu] = useState(false);
+    const [showMobileProjects, setShowMobileProjects] = useState(false);
+    const [showClockExtras, setShowClockExtras] = useState(false);
 
     const isClockedIn = useMemo(() => {
         const lastEntry = timeEntries.length > 0 ? timeEntries[timeEntries.length - 1] : null;
@@ -245,68 +246,83 @@ const App: React.FC = () => {
                 </div>
             </header>
             
-            <main className="container px-3 sm:px-4 py-4 sm:py-6 mx-auto max-w-6xl">
+            <main className="container px-3 sm:px-4 py-3 sm:py-6 mx-auto max-w-6xl">
                 <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
-                    <div className="space-y-4 lg:col-span-1">
+                    {/* On mobile: TimeLog hero first, controls second */}
+                    <div className="order-first lg:order-last lg:col-span-2">
+                       {activeTab === 'clock' && <TimeLog timeEntries={timeEntries} profile={profile} jobs={jobs} />}
+                    </div>
+
+                    <div className="space-y-3 sm:space-y-4 lg:col-span-1 order-last lg:order-first">
                         
                         {activeTab === 'clock' && <>
-                        {/* Time Clock Card */}
+                        {/* Time Clock Card - Compact on mobile */}
                         <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
-                            <div className="px-4 py-3 border-b border-fb-divider">
-                                <h2 className="text-base font-bold text-fb-text">Time Clock</h2>
-                            </div>
-                            <div className="p-4">
-                                {/* Project Selector */}
-                                <div className="mb-3">
-                                    <label className="block mb-1.5 text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">
-                                        {isClockedIn ? 'Switch Project' : 'Select Project'}
-                                    </label>
-                                    <select
-                                        value={selectedProject}
-                                        onChange={(e) => setSelectedProject(e.target.value)}
-                                        className="block w-full px-3 py-2.5 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
-                                    >
-                                        {projects.map(p => (
-                                            <option key={p} value={p}>{p}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Link to Job */}
-                                {jobs.length > 0 && (
-                                    <div className="mb-3">
-                                        <label className="block mb-1.5 text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">Link to Job</label>
+                            <div className="p-3 sm:p-4">
+                                {/* Compact selectors row on mobile */}
+                                <div className="flex gap-2 mb-3">
+                                    <div className="flex-1 min-w-0">
+                                        <label className="block mb-1 text-[10px] sm:text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">
+                                            {isClockedIn ? 'Switch Project' : 'Project'}
+                                        </label>
                                         <select
-                                            value={selectedJobId}
-                                            onChange={(e) => setSelectedJobId(e.target.value)}
-                                            className="block w-full px-3 py-2.5 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                                            value={selectedProject}
+                                            onChange={(e) => setSelectedProject(e.target.value)}
+                                            className="block w-full px-2.5 py-2 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
                                         >
-                                            <option value="">No job (use default rate)</option>
-                                            {jobs.map(j => (
-                                                <option key={j.id} value={j.id}>{j.name}{j.client ? ` — ${j.client}` : ''}</option>
+                                            {projects.map(p => (
+                                                <option key={p} value={p}>{p}</option>
                                             ))}
                                         </select>
                                     </div>
-                                )}
 
-                                {/* Notes & Photos for clock-in */}
+                                    {/* Link to Job - inline on mobile */}
+                                    {jobs.length > 0 && (
+                                        <div className="flex-1 min-w-0">
+                                            <label className="block mb-1 text-[10px] sm:text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">Job</label>
+                                            <select
+                                                value={selectedJobId}
+                                                onChange={(e) => setSelectedJobId(e.target.value)}
+                                                className="block w-full px-2.5 py-2 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                                            >
+                                                <option value="">No job</option>
+                                                {jobs.map(j => (
+                                                    <option key={j.id} value={j.id}>{j.name}{j.client ? ` — ${j.client}` : ''}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Notes & Photos - collapsible on mobile */}
                                 {!isClockedIn && (
-                                    <div className="mb-4 space-y-2">
-                                        <input
-                                            type="text"
-                                            value={clockNotes}
-                                            onChange={(e) => setClockNotes(e.target.value)}
-                                            placeholder="Add notes (optional)..."
-                                            className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors placeholder-fb-text-tertiary"
-                                        />
-                                        <PhotoUpload photos={clockPhotos} onPhotosChange={setClockPhotos} maxPhotos={5} />
-                                    </div>
+                                    <>
+                                        <button
+                                            onClick={() => setShowClockExtras(!showClockExtras)}
+                                            className="flex items-center gap-1.5 mb-2 text-xs font-medium text-fb-text-tertiary hover:text-fb-text-secondary transition-colors md:hidden"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className={`w-3.5 h-3.5 transition-transform ${showClockExtras ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                            Add notes & photos
+                                        </button>
+                                        <div className={`mb-3 space-y-2 ${showClockExtras ? '' : 'hidden md:block'}`}>
+                                            <input
+                                                type="text"
+                                                value={clockNotes}
+                                                onChange={(e) => setClockNotes(e.target.value)}
+                                                placeholder="Add notes (optional)..."
+                                                className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors placeholder-fb-text-tertiary"
+                                            />
+                                            <PhotoUpload photos={clockPhotos} onPhotosChange={setClockPhotos} maxPhotos={5} />
+                                        </div>
+                                    </>
                                 )}
 
                                 <button
                                     onClick={handleClockToggle}
                                     disabled={isLoading}
-                                    className={`flex items-center justify-center w-full px-6 py-3 text-base font-bold rounded-lg transition-all duration-150 disabled:opacity-50 disabled:cursor-wait ${
+                                    className={`flex items-center justify-center w-full px-6 py-3.5 text-base font-bold rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-wait ${
                                         isClockedIn
                                             ? 'text-white bg-fb-red hover:brightness-95 active:scale-[0.98]'
                                             : 'text-white bg-fb-green hover:bg-fb-green-hover active:scale-[0.98]'
@@ -329,69 +345,77 @@ const App: React.FC = () => {
                                 )}
 
                                 {isClockedIn && (
-                                    <div className="mt-4 p-3 bg-red-50 rounded-lg border border-red-100">
-                                        <p className="text-sm font-semibold text-fb-blue">Current Job: {currentClockedInProject}</p>
-                                        <p className="text-xs text-fb-text-secondary mt-1">
+                                    <div className="mt-3 p-2.5 bg-red-50 rounded-lg border border-red-100">
+                                        <p className="text-sm font-semibold text-fb-blue">Current: {currentClockedInProject}</p>
+                                        <p className="text-xs text-fb-text-secondary mt-0.5">
                                             <span className="inline-block w-2 h-2 bg-fb-green rounded-full mr-1.5 animate-pulse"></span>
-                                            Clocked in since {new Date(timeEntries[timeEntries.length-1].clockIn).toLocaleTimeString()}
+                                            Since {new Date(timeEntries[timeEntries.length-1].clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
                                 )}
                                 
                                 {error && (
-                                    <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-100">
+                                    <div className="mt-2 p-2.5 bg-red-50 rounded-lg border border-red-100">
                                         <p className="text-sm text-fb-red">{error}</p>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Project Management */}
+                        {/* Manage Projects - collapsible on mobile */}
                         <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
-                            <div className="px-4 py-3 border-b border-fb-divider">
-                                <h2 className="text-base font-bold text-fb-text">Manage Projects</h2>
-                            </div>
-                            <div className="p-4">
-                                <form onSubmit={handleAddProject} className="flex gap-2 mb-3">
-                                    <input 
-                                        type="text" 
-                                        value={newProjectName}
-                                        onChange={(e) => setNewProjectName(e.target.value)}
-                                        placeholder="New project name..."
-                                        className="flex-1 min-w-0 block w-full px-3 py-2 text-sm bg-fb-bg rounded-lg border border-fb-input-border focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue placeholder-fb-text-tertiary transition-colors"
-                                    />
-                                    <button 
-                                        type="submit"
-                                        disabled={!newProjectName.trim()}
-                                        className="inline-flex justify-center px-4 py-2 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors disabled:opacity-40"
-                                    >
-                                        Add
-                                    </button>
-                                </form>
-                                <ul className="divide-y divide-fb-divider max-h-48 overflow-y-auto">
-                                    {projects.map(proj => (
-                                        <li key={proj} className="py-2 flex justify-between items-center group">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-fb-blue"></div>
-                                                <span className="text-sm text-fb-text">{proj}</span>
-                                            </div>
-                                            {projects.length > 1 && (
-                                                <button 
-                                                    onClick={() => handleDeleteProject(proj)}
-                                                    className="opacity-0 group-hover:opacity-100 text-fb-text-tertiary hover:text-fb-red p-1 rounded transition-all"
-                                                    title="Delete Project"
-                                                >
-                                                    <TrashIcon />
-                                                </button>
-                                            )}
-                                        </li>
-                                    ))}
-                                </ul>
+                            <button
+                                onClick={() => setShowMobileProjects(!showMobileProjects)}
+                                className="w-full px-4 py-3 flex items-center justify-between md:cursor-default"
+                            >
+                                <h2 className="text-sm sm:text-base font-bold text-fb-text">Manage Projects</h2>
+                                <svg xmlns="http://www.w3.org/2000/svg" className={`w-4 h-4 text-fb-text-tertiary transition-transform md:hidden ${showMobileProjects ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div className={`${showMobileProjects ? '' : 'hidden'} md:block border-t border-fb-divider`}>
+                                <div className="p-3 sm:p-4">
+                                    <form onSubmit={handleAddProject} className="flex gap-2 mb-3">
+                                        <input 
+                                            type="text" 
+                                            value={newProjectName}
+                                            onChange={(e) => setNewProjectName(e.target.value)}
+                                            placeholder="New project name..."
+                                            className="flex-1 min-w-0 block w-full px-3 py-2 text-sm bg-fb-bg rounded-lg border border-fb-input-border focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue placeholder-fb-text-tertiary transition-colors"
+                                        />
+                                        <button 
+                                            type="submit"
+                                            disabled={!newProjectName.trim()}
+                                            className="inline-flex justify-center px-4 py-2 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors disabled:opacity-40"
+                                        >
+                                            Add
+                                        </button>
+                                    </form>
+                                    <ul className="divide-y divide-fb-divider max-h-48 overflow-y-auto">
+                                        {projects.map(proj => (
+                                            <li key={proj} className="py-2 flex justify-between items-center group">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full bg-fb-blue"></div>
+                                                    <span className="text-sm text-fb-text">{proj}</span>
+                                                </div>
+                                                {projects.length > 1 && (
+                                                    <button 
+                                                        onClick={() => handleDeleteProject(proj)}
+                                                        className="opacity-0 group-hover:opacity-100 md:opacity-100 text-fb-text-tertiary hover:text-fb-red p-1 rounded transition-all"
+                                                        title="Delete Project"
+                                                    >
+                                                        <TrashIcon />
+                                                    </button>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Quick Report */}
-                        <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
+                        {/* Quick Report - desktop only on clock tab */}
+                        <div className="hidden md:block bg-fb-card rounded-lg shadow-fb overflow-hidden">
                             <div className="px-4 py-3 border-b border-fb-divider">
                                 <h2 className="text-base font-bold text-fb-text">Quick Report</h2>
                             </div>
@@ -416,71 +440,8 @@ const App: React.FC = () => {
                             <PremiumReport profile={profile} timeEntries={timeEntries} jobs={jobs} />
                         )}
                     </div>
-                    
-                    <div className="lg:col-span-2">
-                       <TimeLog timeEntries={timeEntries} profile={profile} jobs={jobs} />
-                    </div>
                 </div>
             </main>
-
-            {/* FAB Plus Button */}
-            <div className="fixed z-50 md:hidden" style={{ bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px) + 12px)', right: '16px' }}>
-                {/* Menu items */}
-                {showFabMenu && (
-                    <div className="absolute bottom-16 right-0 flex flex-col gap-2 items-end animate-slide-up">
-                        <button
-                            onClick={() => { setActiveTab('clock'); setShowFabMenu(false); }}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full shadow-fb-xl text-sm font-semibold text-fb-text hover:bg-fb-bg transition-colors"
-                        >
-                            <span>Clock In / Out</span>
-                            <div className="w-8 h-8 rounded-full bg-fb-green flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                        </button>
-                        <button
-                            onClick={() => { setActiveTab('jobs'); setShowFabMenu(false); }}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full shadow-fb-xl text-sm font-semibold text-fb-text hover:bg-fb-bg transition-colors"
-                        >
-                            <span>New Job</span>
-                            <div className="w-8 h-8 rounded-full bg-fb-blue flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 13.255A23.193 23.193 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                        </button>
-                        <button
-                            onClick={() => { setActiveTab('report'); setShowFabMenu(false); }}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full shadow-fb-xl text-sm font-semibold text-fb-text hover:bg-fb-bg transition-colors"
-                        >
-                            <span>Reports</span>
-                            <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                        </button>
-                    </div>
-                )}
-                {/* FAB button */}
-                <button
-                    onClick={() => setShowFabMenu(!showFabMenu)}
-                    className={`flex items-center justify-center w-14 h-14 rounded-full shadow-fb-xl transition-all duration-200 ${
-                        showFabMenu
-                            ? 'bg-fb-text rotate-45'
-                            : 'bg-fb-blue hover:bg-fb-blue-hover'
-                    }`}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                    </svg>
-                </button>
-            </div>
-            {/* FAB backdrop */}
-            {showFabMenu && (
-                <div className="fixed inset-0 z-40 bg-black/20 md:hidden" onClick={() => setShowFabMenu(false)} />
-            )}
 
             {/* Mobile Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-fb-divider md:hidden safe-area-bottom">
