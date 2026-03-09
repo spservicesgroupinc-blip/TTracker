@@ -40,13 +40,11 @@ function formatElapsed(ms: number): string {
 const App: React.FC = () => {
   const [profile, setProfile] = useLocalStorage<UserProfile | null>('user-profile', null);
   const [timeEntries, setTimeEntries] = useLocalStorage<TimeEntry[]>('time-entries', []);
-  const [projects] = useLocalStorage<string[]>('projects', ['General']);
   const [jobs, setJobs] = useLocalStorage<Job[]>('jobs', []);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProject, setSelectedProject] = useState<string>('General');
-  const [selectedJobId, setSelectedJobId] = useState<string>('');
+  const [selectedJobId, setSelectedJobId] = useState<string>('general');
   const [activeTab, setActiveTab] = useState<'clock' | 'jobs' | 'report'>('clock');
   const [now, setNow] = useState(Date.now());
   const [showTaskComposer, setShowTaskComposer] = useState(false);
@@ -66,30 +64,19 @@ const App: React.FC = () => {
   }, [isClockedIn]);
 
   useEffect(() => {
-    if (!selectedProject) {
-      setSelectedProject(projects[0] || 'General');
-    }
-  }, [projects, selectedProject]);
-
-  useEffect(() => {
-    if (selectedJobId && !jobs.find((j) => j.id === selectedJobId)) {
-      setSelectedJobId('');
+    if (selectedJobId !== 'general' && !jobs.find((j) => j.id === selectedJobId)) {
+      setSelectedJobId('general');
       return;
     }
 
     if (activeEntry?.jobId) {
       setSelectedJobId(activeEntry.jobId);
-      return;
-    }
-    if (!selectedJobId && jobs.length > 0) {
-      setSelectedJobId(jobs[0].id);
     }
   }, [jobs, selectedJobId, activeEntry]);
 
   const selectedJob = useMemo(() => {
-    if (selectedJobId) {
-      const exactJob = jobs.find((j) => j.id === selectedJobId);
-      if (exactJob) return exactJob;
+    if (selectedJobId && selectedJobId !== 'general') {
+      return jobs.find((j) => j.id === selectedJobId) || null;
     }
     return null;
   }, [jobs, selectedJobId]);
@@ -135,8 +122,8 @@ const App: React.FC = () => {
       } else {
         const newEntry: TimeEntry = {
           id: new Date().toISOString(),
-          projectName: selectedProject,
-          jobId: selectedJobId || undefined,
+          projectName: 'General',
+          jobId: selectedJobId !== 'general' ? selectedJobId : undefined,
           clockIn: new Date().toISOString(),
           clockInLocation: location,
         };
@@ -245,25 +232,13 @@ const App: React.FC = () => {
         {activeTab === 'clock' && (
           <section className="mx-auto max-w-md space-y-3 sm:space-y-4">
             <div className="bg-fb-card rounded-xl shadow-fb overflow-hidden">
-              <div className="p-3 sm:p-4 border-b border-fb-divider flex gap-2">
-                <select
-                  value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
-                  className="flex-1 min-w-0 px-2.5 py-2 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue"
-                >
-                  {projects.map((project) => (
-                    <option key={project} value={project}>
-                      {project}
-                    </option>
-                  ))}
-                </select>
-
+              <div className="p-3 sm:p-4 border-b border-fb-divider">
                 <select
                   value={selectedJobId}
                   onChange={(e) => setSelectedJobId(e.target.value)}
-                  className="flex-1 min-w-0 px-2.5 py-2 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue"
+                  className="w-full px-3 py-2.5 text-sm font-medium text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue"
                 >
-                  <option value="">No Job</option>
+                  <option value="general">General Work</option>
                   {jobs.map((job) => (
                     <option key={job.id} value={job.id}>
                       {job.name}

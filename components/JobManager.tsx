@@ -27,6 +27,13 @@ const CheckIcon = () => (
   </svg>
 );
 
+const CameraSmallIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
 const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [expandedJobId, setExpandedJobId] = useState<string | null>(null);
@@ -34,21 +41,17 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
 
   // Job form
   const [jobName, setJobName] = useState('');
-  const [jobClient, setJobClient] = useState('');
   const [jobDescription, setJobDescription] = useState('');
-  const [jobRate, setJobRate] = useState('');
-  const [jobColor, setJobColor] = useState(JOB_COLORS[0]);
+  const [jobAddress, setJobAddress] = useState('');
 
   // Task form
   const [taskTitle, setTaskTitle] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
+  const [expandedTaskPhotos, setExpandedTaskPhotos] = useState<string | null>(null);
 
   const resetJobForm = () => {
     setJobName('');
-    setJobClient('');
     setJobDescription('');
-    setJobRate('');
-    setJobColor(JOB_COLORS[0]);
+    setJobAddress('');
   };
 
   const handleCreateJob = (e: React.FormEvent) => {
@@ -58,13 +61,14 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
     const newJob: Job = {
       id: `job-${Date.now()}`,
       name: jobName.trim(),
-      client: jobClient.trim(),
+      client: '',
       description: jobDescription.trim(),
-      hourlyRate: parseFloat(jobRate) || 0,
+      address: jobAddress.trim(),
+      hourlyRate: 0,
       tasks: [],
       photos: [],
       createdAt: new Date().toISOString(),
-      color: jobColor,
+      color: JOB_COLORS[Math.floor(Math.random() * JOB_COLORS.length)],
     };
 
     onJobsChange([...jobs, newJob]);
@@ -87,7 +91,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
       id: `task-${Date.now()}`,
       jobId,
       title: taskTitle.trim(),
-      description: taskDescription.trim(),
+      description: '',
       status: 'pending',
       photos: [],
       createdAt: new Date().toISOString(),
@@ -97,7 +101,6 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
       j.id === jobId ? { ...j, tasks: [...j.tasks, newTask] } : j
     ));
     setTaskTitle('');
-    setTaskDescription('');
     setShowAddTask(null);
   };
 
@@ -142,20 +145,6 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
     ));
   };
 
-  const statusBadge = (status: Task['status']) => {
-    const styles = {
-      'pending': 'bg-gray-100 text-gray-600',
-      'in-progress': 'bg-red-50 text-fb-blue',
-      'completed': 'bg-green-50 text-fb-green',
-    };
-    const labels = { 'pending': 'Pending', 'in-progress': 'In Progress', 'completed': 'Done' };
-    return (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${styles[status]}`}>
-        {labels[status]}
-      </span>
-    );
-  };
-
   return (
     <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
       <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-fb-divider flex items-center justify-between">
@@ -172,28 +161,17 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
       {showCreateJob && (
         <div className="p-3 sm:p-4 border-b border-fb-divider bg-fb-bg">
           <form onSubmit={handleCreateJob} className="space-y-2.5 sm:space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Job Name *</label>
-                <input
-                  type="text"
-                  value={jobName}
-                  onChange={e => setJobName(e.target.value)}
-                  placeholder="e.g., Kitchen Renovation"
-                  className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Client</label>
-                <input
-                  type="text"
-                  value={jobClient}
-                  onChange={e => setJobClient(e.target.value)}
-                  placeholder="e.g., John Smith"
-                  className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Job Name *</label>
+              <input
+                type="text"
+                value={jobName}
+                onChange={e => setJobName(e.target.value)}
+                placeholder="e.g., Kitchen Renovation"
+                className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                required
+                autoFocus
+              />
             </div>
             <div>
               <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Description</label>
@@ -205,33 +183,15 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                 className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors resize-none"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Hourly Rate ($)</label>
-                <input
-                  type="number"
-                  value={jobRate}
-                  onChange={e => setJobRate(e.target.value)}
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                  className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Color</label>
-                <div className="flex gap-1.5 flex-wrap">
-                  {JOB_COLORS.map(c => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setJobColor(c)}
-                      className={`w-7 h-7 rounded-full border-2 transition-all ${jobColor === c ? 'border-fb-text scale-110' : 'border-transparent'}`}
-                      style={{ backgroundColor: c }}
-                    />
-                  ))}
-                </div>
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Address</label>
+              <input
+                type="text"
+                value={jobAddress}
+                onChange={e => setJobAddress(e.target.value)}
+                placeholder="e.g., 123 Main St, City, ST"
+                className="block w-full px-3 py-2 text-sm bg-white border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+              />
             </div>
             <div className="flex gap-2 justify-end">
               <button
@@ -279,10 +239,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs sm:text-sm font-semibold text-fb-text truncate">{job.name}</p>
                     <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5">
-                      {job.client && <span className="text-[10px] sm:text-xs text-fb-text-secondary truncate max-w-[80px] sm:max-w-none">{job.client}</span>}
-                      {job.hourlyRate > 0 && (
-                        <span className="text-[10px] sm:text-xs font-semibold text-fb-green">${job.hourlyRate.toFixed(2)}/hr</span>
-                      )}
+                      {job.address && <span className="text-[10px] sm:text-xs text-fb-text-secondary truncate">{job.address}</span>}
                       <span className="text-[10px] sm:text-xs text-fb-text-tertiary">
                         {completedTasks}/{job.tasks.length} tasks
                       </span>
@@ -294,17 +251,11 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                 {isExpanded && (
                   <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-fb-bg/50">
                     {job.description && (
-                      <p className="text-xs text-fb-text-secondary mb-3 px-1">{job.description}</p>
+                      <p className="text-xs text-fb-text-secondary mb-2 px-1">{job.description}</p>
                     )}
-
-                    {/* Job Photos */}
-                    <div className="mb-3">
-                      <p className="text-xs font-semibold text-fb-text-secondary mb-1.5 uppercase tracking-wide">Job Photos</p>
-                      <PhotoUpload
-                        photos={job.photos}
-                        onPhotosChange={(photos) => handleJobPhotosChange(job.id, photos)}
-                      />
-                    </div>
+                    {job.address && (
+                      <p className="text-xs text-fb-text-tertiary mb-3 px-1">📍 {job.address}</p>
+                    )}
 
                     {/* Tasks */}
                     <div className="mb-3">
@@ -319,27 +270,18 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                       </div>
 
                       {showAddTask === job.id && (
-                        <form onSubmit={(e) => handleAddTask(job.id, e)} className="mb-3 p-3 bg-white rounded-lg border border-fb-divider space-y-2">
+                        <form onSubmit={(e) => handleAddTask(job.id, e)} className="mb-3 p-3 bg-white rounded-lg border border-fb-divider flex items-center gap-2">
                           <input
                             type="text"
                             value={taskTitle}
                             onChange={e => setTaskTitle(e.target.value)}
-                            placeholder="Task title..."
-                            className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                            placeholder="Task name..."
+                            className="flex-1 min-w-0 px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
                             required
                             autoFocus
                           />
-                          <textarea
-                            value={taskDescription}
-                            onChange={e => setTaskDescription(e.target.value)}
-                            placeholder="Description (optional)..."
-                            rows={2}
-                            className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors resize-none"
-                          />
-                          <div className="flex gap-2 justify-end">
-                            <button type="button" onClick={() => { setShowAddTask(null); setTaskTitle(''); setTaskDescription(''); }} className="px-3 py-1.5 text-xs font-semibold text-fb-text-secondary bg-fb-active-bg rounded-lg">Cancel</button>
-                            <button type="submit" disabled={!taskTitle.trim()} className="px-3 py-1.5 text-xs font-bold text-white bg-fb-blue rounded-lg disabled:opacity-40">Add</button>
-                          </div>
+                          <button type="button" onClick={() => { setShowAddTask(null); setTaskTitle(''); }} className="px-3 py-2 text-xs font-semibold text-fb-text-secondary bg-fb-active-bg rounded-lg">Cancel</button>
+                          <button type="submit" disabled={!taskTitle.trim()} className="px-3 py-2 text-xs font-bold text-white bg-fb-blue rounded-lg disabled:opacity-40">Add</button>
                         </form>
                       )}
 
@@ -347,51 +289,60 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                         <p className="text-xs text-fb-text-tertiary text-center py-4">No tasks yet</p>
                       ) : (
                         <div className="space-y-2">
-                          {job.tasks.map(task => (
-                            <div key={task.id} className="p-3 bg-white rounded-lg border border-fb-divider">
-                              <div className="flex items-start gap-2">
-                                <button
-                                  onClick={() => handleToggleTaskStatus(job.id, task.id)}
-                                  className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                                    task.status === 'completed'
-                                      ? 'bg-fb-green border-fb-green text-white'
-                                      : task.status === 'in-progress'
-                                      ? 'bg-red-50 border-fb-blue text-fb-blue'
-                                      : 'border-fb-divider hover:border-fb-blue'
-                                  }`}
-                                >
-                                  {task.status === 'completed' && <CheckIcon />}
-                                  {task.status === 'in-progress' && <span className="w-2 h-2 rounded-full bg-fb-blue" />}
-                                </button>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <p className={`text-sm font-semibold ${task.status === 'completed' ? 'line-through text-fb-text-tertiary' : 'text-fb-text'}`}>
-                                      {task.title}
-                                    </p>
-                                    {statusBadge(task.status)}
-                                  </div>
-                                  {task.description && (
-                                    <p className="text-xs text-fb-text-secondary mt-1">{task.description}</p>
-                                  )}
-                                  <div className="mt-2">
+                          {job.tasks.map(task => {
+                            const isDone = task.status === 'completed';
+                            const showPhotos = expandedTaskPhotos === task.id;
+                            return (
+                              <div key={task.id} className="bg-white rounded-lg border border-fb-divider overflow-hidden">
+                                <div className="p-3 flex items-center gap-2.5">
+                                  <button
+                                    onClick={() => handleToggleTaskStatus(job.id, task.id)}
+                                    className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
+                                      isDone
+                                        ? 'bg-fb-green border-fb-green text-white'
+                                        : 'border-fb-divider hover:border-fb-blue'
+                                    }`}
+                                  >
+                                    {isDone && <CheckIcon />}
+                                  </button>
+                                  <span className={`flex-1 text-sm ${isDone ? 'line-through text-fb-text-tertiary' : 'font-medium text-fb-text'}`}>
+                                    {task.title}
+                                  </span>
+                                  <button
+                                    onClick={() => setExpandedTaskPhotos(showPhotos ? null : task.id)}
+                                    className={`relative inline-flex items-center gap-1 px-2 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                                      showPhotos || task.photos.length > 0
+                                        ? 'text-fb-blue bg-blue-50'
+                                        : 'text-fb-text-tertiary hover:text-fb-blue hover:bg-blue-50'
+                                    }`}
+                                    title="Photos"
+                                  >
+                                    <CameraSmallIcon />
+                                    {task.photos.length > 0 && (
+                                      <span className="text-[10px]">{task.photos.length}</span>
+                                    )}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteTask(job.id, task.id)}
+                                    className="text-fb-text-tertiary hover:text-fb-red p-1 rounded transition-colors shrink-0"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  </button>
+                                </div>
+                                {showPhotos && (
+                                  <div className="px-3 pb-3 border-t border-fb-divider pt-2">
                                     <PhotoUpload
                                       photos={task.photos}
                                       onPhotosChange={(photos) => handleTaskPhotosChange(job.id, task.id, photos)}
-                                      maxPhotos={5}
+                                      maxPhotos={10}
                                     />
                                   </div>
-                                </div>
-                                <button
-                                  onClick={() => handleDeleteTask(job.id, task.id)}
-                                  className="text-fb-text-tertiary hover:text-fb-red p-1 rounded transition-colors shrink-0"
-                                >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                </button>
+                                )}
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>

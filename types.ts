@@ -27,6 +27,7 @@ export interface Job {
   name: string;
   client: string;
   description: string;
+  address: string;
   hourlyRate: number;
   tasks: Task[];
   photos: Photo[];
