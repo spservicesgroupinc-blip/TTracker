@@ -7,6 +7,7 @@ import TimeLog from './components/TimeLog';
 import JobManager from './components/JobManager';
 import PremiumReport from './components/PremiumReport';
 import PhotoUpload from './components/PhotoUpload';
+import InstallPrompt from './components/InstallPrompt';
 import { getCurrentPosition } from './services/locationService';
 import { generatePayReport } from './services/pdfService';
 
@@ -174,7 +175,7 @@ const App: React.FC = () => {
     }
     
     return (
-        <div className="min-h-screen text-fb-text bg-fb-bg font-fb">
+        <div className="min-h-screen text-fb-text bg-fb-bg font-fb pb-16 md:pb-0">
             {/* Facebook-style top header bar */}
             <header className="sticky top-0 z-50 bg-white shadow-fb">
                 <div className="container flex items-center justify-between h-14 px-4 mx-auto">
@@ -207,9 +208,9 @@ const App: React.FC = () => {
                 </div>
             </header>
             
-            <main className="container px-4 py-6 mx-auto max-w-6xl">
-                {/* Tab Navigation */}
-                <div className="flex gap-1 p-1 mb-4 bg-fb-card rounded-lg shadow-fb max-w-md">
+            <main className="container px-3 sm:px-4 py-4 sm:py-6 mx-auto max-w-6xl">
+                {/* Tab Navigation - hidden on mobile, shown on md+ */}
+                <div className="hidden md:flex gap-1 p-1 mb-4 bg-fb-card rounded-lg shadow-fb max-w-md">
                     {([['clock', 'Time Clock'], ['jobs', 'Jobs & Tasks'], ['report', 'Reports']] as const).map(([key, label]) => (
                         <button
                             key={key}
@@ -223,7 +224,7 @@ const App: React.FC = () => {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
                     <div className="space-y-4 lg:col-span-1">
                         
                         {activeTab === 'clock' && <>
@@ -399,6 +400,28 @@ const App: React.FC = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-fb-divider md:hidden safe-area-bottom">
+                <div className="flex">
+                    {([['clock', 'Clock', 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'], ['jobs', 'Jobs', 'M21 13.255A23.193 23.193 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'], ['report', 'Reports', 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z']] as const).map(([key, label, path]) => (
+                        <button
+                            key={key}
+                            onClick={() => setActiveTab(key as any)}
+                            className={`flex-1 flex flex-col items-center py-2 pt-2.5 transition-colors ${
+                                activeTab === key ? 'text-fb-blue' : 'text-fb-text-tertiary'
+                            }`}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === key ? 2.5 : 1.5} d={path} />
+                            </svg>
+                            <span className="text-[10px] font-semibold mt-0.5">{label}</span>
+                        </button>
+                    ))}
+                </div>
+            </nav>
+
+            <InstallPrompt />
         </div>
     );
 };

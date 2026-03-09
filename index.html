@@ -3,9 +3,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>GeoTime Tracker</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Track your work hours with GPS location verification" />
+    <meta name="theme-color" content="#1877F2" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="GeoTime" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -39,10 +52,25 @@
               'fb-lg': '0 2px 8px rgba(0, 0, 0, 0.1)',
               'fb-xl': '0 8px 30px rgba(0, 0, 0, 0.12)',
             },
+            keyframes: {
+              'slide-up': {
+                '0%': { transform: 'translateY(100%)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+            },
+            animation: {
+              'slide-up': 'slide-up 0.3s ease-out',
+            },
           },
         },
       }
     </script>
+    <style>
+      .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      @media (max-width: 767px) {
+        .pb-16 { padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)); }
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {
@@ -55,8 +83,16 @@
 }
 </script>
 </head>
-  <body class="bg-fb-bg font-fb">
+  <body class="bg-fb-bg font-fb overscroll-none">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
+    <script>
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>
