@@ -114,7 +114,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
       <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-fb-divider">
         <div className="flex items-center gap-2">
           <h2 className="text-sm sm:text-base font-bold text-fb-text">Premium Pay Report</h2>
-          <span className="px-2 py-0.5 text-[10px] font-bold text-white bg-gradient-to-r from-purple-500 to-fb-blue rounded-full uppercase tracking-wider">Pro</span>
+          <span className="px-2 py-0.5 text-[10px] font-bold text-white bg-fb-blue rounded-full uppercase tracking-wider">Pro</span>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         {/* Period Selector */}
         <div>
           <label className="block text-xs font-semibold text-fb-text-secondary mb-1.5 uppercase tracking-wide">Report Period</label>
-          <div className="grid grid-cols-4 gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-fb-bg rounded-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-fb-bg rounded-lg">
             {(['weekly', 'biweekly', 'monthly', 'custom'] as const).map(type => (
               <button
                 key={type}
@@ -138,7 +138,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         </div>
 
         {periodType === 'custom' && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Start Date</label>
               <input
@@ -246,7 +246,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         <button
           onClick={handleGenerate}
           disabled={filteredEntries.length === 0 || isGenerating}
-          className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-purple-500 to-fb-blue rounded-lg hover:brightness-105 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

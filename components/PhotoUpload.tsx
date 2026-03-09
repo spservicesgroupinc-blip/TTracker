@@ -17,32 +17,50 @@ const CameraIcon = () => (
 const PhotoUpload: React.FC<PhotoUploadProps> = ({ photos, onPhotosChange, maxPhotos = 10 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const fileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const result = ev.target?.result;
+        if (typeof result === 'string') {
+          resolve(result);
+          return;
+        }
+        reject(new Error('Unable to read image file.'));
+      };
+      reader.onerror = () => reject(new Error('Unable to read image file.'));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
     const remaining = maxPhotos - photos.length;
-    const filesToProcess = Array.from(files).slice(0, remaining);
+    const filesToProcess = Array.from(files)
+      .slice(0, remaining)
+      .filter((file) => file.type.startsWith('image/'))
+      .filter((file) => file.size <= 5 * 1024 * 1024);
 
-    filesToProcess.forEach((file: File) => {
-      if (!file.type.startsWith('image/')) return;
-      if (file.size > 5 * 1024 * 1024) return; // 5MB limit
-
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const dataUrl = ev.target?.result as string;
-        if (!dataUrl) return;
-
-        const newPhoto: Photo = {
-          id: `photo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    const nextPhotos: Photo[] = [];
+    for (const file of filesToProcess) {
+      try {
+        const dataUrl = await fileToDataUrl(file);
+        nextPhotos.push({
+          id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
           dataUrl,
           caption: file.name,
           timestamp: new Date().toISOString(),
-        };
-        onPhotosChange([...photos, newPhoto]);
-      };
-      reader.readAsDataURL(file);
-    });
+        });
+      } catch {
+        // Skip files that fail to load so the rest of the selection still succeeds.
+      }
+    }
+
+    if (nextPhotos.length > 0) {
+      onPhotosChange([...photos, ...nextPhotos]);
+    }
 
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -59,7 +77,8 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({ photos, onPhotosChange, maxPh
             <img src={photo.dataUrl} alt={photo.caption} className="w-full h-full object-cover" />
             <button
               onClick={() => removePhoto(photo.id)}
-              className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/60 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-0.5 right-0.5 w-6 h-6 bg-black/65 text-white rounded-full text-sm flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+              aria-label="Remove photo"
             >
               ×
             </button>

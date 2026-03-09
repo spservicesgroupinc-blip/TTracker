@@ -27,8 +27,8 @@ const ProfileSetup: React.FC<ProfileSetupProps> = ({ onProfileSave }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-fb-bg font-fb">
-      <div className="w-full max-w-sm mx-4">
+    <div className="flex items-start sm:items-center justify-center min-h-screen bg-fb-bg font-fb px-4 py-6 sm:py-0">
+      <div className="w-full max-w-sm">
         {/* Logo + Title */}
         <div className="text-center mb-6">
           <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-2xl bg-[#1A1A1A] mb-3">

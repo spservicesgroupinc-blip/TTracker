@@ -72,6 +72,11 @@ const App: React.FC = () => {
   }, [projects, selectedProject]);
 
   useEffect(() => {
+    if (selectedJobId && !jobs.find((j) => j.id === selectedJobId)) {
+      setSelectedJobId('');
+      return;
+    }
+
     if (activeEntry?.jobId) {
       setSelectedJobId(activeEntry.jobId);
       return;
@@ -194,7 +199,15 @@ const App: React.FC = () => {
     return <ProfileSetup onProfileSave={setProfile} />;
   }
 
-  const tasksForMainScreen = selectedJob?.tasks || [];
+  const tasksForMainScreen = useMemo(() => {
+    if (!selectedJob) return [];
+    return [...selectedJob.tasks].sort((a, b) => {
+      const aDone = a.status === 'completed' ? 1 : 0;
+      const bDone = b.status === 'completed' ? 1 : 0;
+      if (aDone !== bDone) return aDone - bDone;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [selectedJob]);
 
   return (
     <div className="min-h-screen text-fb-text bg-fb-bg font-fb pb-16 md:pb-0">
@@ -259,7 +272,7 @@ const App: React.FC = () => {
                 </select>
               </div>
 
-              <div className="px-4 py-6 sm:px-6 sm:py-8 text-center space-y-4">
+              <div className="px-4 py-6 sm:px-6 sm:py-8 text-center space-y-4 min-h-[52vh] flex flex-col justify-center">
                 <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide uppercase ${isClockedIn ? 'bg-green-500/10 text-green-600' : 'bg-fb-bg text-fb-text-tertiary'}`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${isClockedIn ? 'bg-green-500 animate-pulse' : 'bg-fb-text-tertiary'}`} />
                   {isClockedIn ? 'On The Clock' : 'Ready To Clock In'}

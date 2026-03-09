@@ -1,4 +1,3 @@
-// Fix: Import `React` to make the `React` namespace available for type annotations.
 import React, { useState, useEffect } from 'react';
 
 function useLocalStorage<T,>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
@@ -12,26 +11,33 @@ function useLocalStorage<T,>(key: string, initialValue: T): [T, React.Dispatch<R
     }
   });
 
-  const setValue = (value: T | ((val: T) => T)) => {
+  const setValue: React.Dispatch<React.SetStateAction<T>> = (value) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      setStoredValue((previousValue) => {
+        const valueToStore = value instanceof Function ? value(previousValue) : value;
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        return valueToStore;
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      if (item !== JSON.stringify(storedValue)) {
-        setStoredValue(item ? JSON.parse(item) : initialValue);
+    const onStorage = (event: StorageEvent) => {
+      if (event.storageArea !== window.localStorage || event.key !== key) return;
+
+      try {
+        const nextValue = event.newValue ? JSON.parse(event.newValue) : initialValue;
+        setStoredValue(nextValue);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [key, initialValue, storedValue]);
+    };
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [initialValue, key]);
 
   return [storedValue, setValue];
 }
