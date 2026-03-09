@@ -14,7 +14,7 @@ export const generatePayReport = (profile: UserProfile, timeEntries: TimeEntry[]
     const doc = new jsPDF();
 
     doc.setFontSize(20);
-    doc.text('Pay Report', 14, 22);
+    doc.text('RFE Pay Report', 14, 22);
     doc.setFontSize(12);
     doc.text(`Employee: ${profile.name}`, 14, 32);
     doc.text(`Hourly Wage: $${profile.hourlyWage.toFixed(2)}`, 14, 38);
@@ -50,7 +50,7 @@ export const generatePayReport = (profile: UserProfile, timeEntries: TimeEntry[]
         body: tableRows,
         startY: 60,
         theme: 'striped',
-        headStyles: { fillColor: [22, 160, 133] },
+        headStyles: { fillColor: [204, 0, 0] },
     });
 
     const finalY = (doc as any).lastAutoTable.finalY || 80;
@@ -81,11 +81,11 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // ═══ Header ═══
-    doc.setFillColor(24, 119, 242); // fb-blue
+    doc.setFillColor(204, 0, 0); // rfe-red
     doc.rect(0, 0, pageWidth, 35, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
-    doc.text('Premium Pay Report', 14, 18);
+    doc.text('RFE Premium Pay Report', 14, 18);
     doc.setFontSize(10);
     doc.text(`${periodStart.toLocaleDateString()} — ${periodEnd.toLocaleDateString()}`, 14, 28);
     doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - 14, 28, { align: 'right' });
@@ -156,7 +156,7 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
             body: projectRows,
             startY: yPos,
             theme: 'grid',
-            headStyles: { fillColor: [24, 119, 242], fontSize: 9 },
+            headStyles: { fillColor: [204, 0, 0], fontSize: 9 },
             bodyStyles: { fontSize: 9 },
             columnStyles: {
                 2: { halign: 'right' },
@@ -195,7 +195,7 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
         body: detailRows,
         startY: yPos,
         theme: 'striped',
-        headStyles: { fillColor: [24, 119, 242], fontSize: 8 },
+        headStyles: { fillColor: [204, 0, 0], fontSize: 8 },
         bodyStyles: { fontSize: 8 },
         columnStyles: {
             4: { halign: 'right' },
@@ -219,7 +219,7 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
             for (const job of jobsWithTasks) {
                 if (yPos > 250) { doc.addPage(); yPos = 20; }
                 doc.setFontSize(11);
-                doc.setTextColor(24, 119, 242);
+                doc.setTextColor(204, 0, 0);
                 doc.text(`${job.name}${job.client ? ` — ${job.client}` : ''}`, 14, yPos);
                 yPos += 4;
 
@@ -246,7 +246,7 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
                         if (data.section === 'body' && data.column.index === 1) {
                             const val = data.cell.raw;
                             if (val === 'Done') data.cell.styles.textColor = [66, 183, 42];
-                            else if (val === 'In Progress') data.cell.styles.textColor = [24, 119, 242];
+                            else if (val === 'In Progress') data.cell.styles.textColor = [204, 0, 0];
                             else data.cell.styles.textColor = [138, 141, 145];
                         }
                     },
@@ -316,7 +316,7 @@ export const generatePremiumPayReport = async (options: PremiumReportOptions) =>
         doc.setFontSize(7);
         doc.setTextColor(138, 141, 145);
         doc.text(
-            `GeoTime Premium Report — Page ${i} of ${totalPages}`,
+            `RFE Premium Report — Page ${i} of ${totalPages}`,
             pageWidth / 2,
             doc.internal.pageSize.getHeight() - 8,
             { align: 'center' }

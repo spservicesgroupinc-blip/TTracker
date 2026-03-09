@@ -1,6 +1,6 @@
 {
-  "name": "GeoTime Tracker",
-  "description": "A GPS-stamped time tracking app for construction employees to clock in/out, track hours, and generate pay reports.",
+  "name": "RFE Time Tracker",
+  "description": "RFE Foam Equipment — A GPS-stamped time tracking app for employees to clock in/out, track hours, and generate pay reports.",
   "requestFramePermissions": [
     "geolocation"
   ]

@@ -46,13 +46,11 @@ const InstallPrompt: React.FC = () => {
   return (
     <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 bg-white rounded-xl shadow-fb-xl border border-fb-divider p-4 animate-slide-up">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-fb-blue flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+        <div className="w-10 h-10 rounded-xl bg-[#1A1A1A] flex items-center justify-center shrink-0">
+          <span className="text-xs font-extrabold text-white tracking-tight">RFE</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-fb-text">Install GeoTime</p>
+          <p className="text-sm font-bold text-fb-text">Install RFE Tracker</p>
           <p className="text-xs text-fb-text-secondary mt-0.5">Install as a desktop app for quick access and offline support.</p>
           <div className="flex gap-2 mt-3">
             <button

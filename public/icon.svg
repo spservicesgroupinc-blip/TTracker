@@ -1,34 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1877F2;stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1"/>
-    </linearGradient>
-    <linearGradient id="pin" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#E3F2FD;stop-opacity:1"/>
-    </linearGradient>
-  </defs>
-  <!-- Background rounded square -->
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <!-- Location pin body -->
-  <path d="M256 60c-77 0-140 63-140 140 0 105 140 252 140 252s140-147 140-252c0-77-63-140-140-140z" fill="url(#pin)" opacity="0.15"/>
-  <path d="M256 80c-66 0-120 54-120 120 0 90 120 216 120 216s120-126 120-216c0-66-54-120-120-120z" fill="none" stroke="white" stroke-width="20" stroke-linejoin="round"/>
-  <!-- Clock face inside pin -->
-  <circle cx="256" cy="200" r="72" fill="rgba(255,255,255,0.15)" stroke="white" stroke-width="16"/>
-  <!-- Hour hand -->
-  <line x1="256" y1="200" x2="256" y2="152" stroke="white" stroke-width="14" stroke-linecap="round"/>
-  <!-- Minute hand -->
-  <line x1="256" y1="200" x2="290" y2="224" stroke="white" stroke-width="10" stroke-linecap="round"/>
-  <!-- Center dot -->
-  <circle cx="256" cy="200" r="8" fill="white"/>
-  <!-- Hour markers -->
-  <circle cx="256" cy="140" r="5" fill="white" opacity="0.7"/>
-  <circle cx="316" cy="200" r="5" fill="white" opacity="0.7"/>
-  <circle cx="256" cy="260" r="5" fill="white" opacity="0.7"/>
-  <circle cx="196" cy="200" r="5" fill="white" opacity="0.7"/>
-  <!-- GPS pulse rings -->
-  <circle cx="380" cy="400" r="24" fill="none" stroke="#42B72A" stroke-width="4" opacity="0.3"/>
-  <circle cx="380" cy="400" r="40" fill="none" stroke="#42B72A" stroke-width="3" opacity="0.15"/>
-  <circle cx="380" cy="400" r="10" fill="#42B72A"/>
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#1A1A1A"/>
+  <!-- Red accent bar -->
+  <rect x="0" y="0" width="12" height="512" rx="6" fill="#CC0000"/>
+  <!-- RFE text -->
+  <text x="256" y="240" text-anchor="middle" fill="#FFFFFF" font-family="Inter, Arial, Helvetica, sans-serif" font-weight="800" font-size="200" letter-spacing="-8">RFE</text>
+  <!-- FOAM text -->
+  <text x="256" y="340" text-anchor="middle" fill="#CC0000" font-family="Inter, Arial, Helvetica, sans-serif" font-weight="700" font-size="58" letter-spacing="12">FOAM</text>
+  <!-- EQUIPMENT text -->
+  <text x="256" y="400" text-anchor="middle" fill="#999999" font-family="Inter, Arial, Helvetica, sans-serif" font-weight="600" font-size="42" letter-spacing="8">EQUIPMENT</text>
 </svg>

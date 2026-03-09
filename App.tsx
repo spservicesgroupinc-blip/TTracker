@@ -11,28 +11,17 @@ import InstallPrompt from './components/InstallPrompt';
 import { getCurrentPosition } from './services/locationService';
 import { generatePayReport } from './services/pdfService';
 
-// -- Inline Logo: clock inside a location pin with GPS pulse --
-const GeoTimeLogo: React.FC<{ size?: number }> = ({ size = 36 }) => (
+// -- Inline Logo: RFE Foam Equipment --
+const RFELogo: React.FC<{ size?: number }> = ({ size = 36 }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width={size} height={size}>
-        <defs>
-            <linearGradient id="logoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#1877F2" />
-                <stop offset="100%" stopColor="#0D47A1" />
-            </linearGradient>
-        </defs>
-        <rect width="512" height="512" rx="112" fill="url(#logoBg)" />
-        <path d="M256 80c-66 0-120 54-120 120 0 90 120 216 120 216s120-126 120-216c0-66-54-120-120-120z" fill="none" stroke="white" strokeWidth="20" strokeLinejoin="round" />
-        <circle cx="256" cy="200" r="72" fill="rgba(255,255,255,0.15)" stroke="white" strokeWidth="16" />
-        <line x1="256" y1="200" x2="256" y2="152" stroke="white" strokeWidth="14" strokeLinecap="round" />
-        <line x1="256" y1="200" x2="290" y2="224" stroke="white" strokeWidth="10" strokeLinecap="round" />
-        <circle cx="256" cy="200" r="8" fill="white" />
-        <circle cx="256" cy="140" r="5" fill="white" opacity="0.7" />
-        <circle cx="316" cy="200" r="5" fill="white" opacity="0.7" />
-        <circle cx="256" cy="260" r="5" fill="white" opacity="0.7" />
-        <circle cx="196" cy="200" r="5" fill="white" opacity="0.7" />
-        <circle cx="380" cy="400" r="24" fill="none" stroke="#42B72A" strokeWidth="4" opacity="0.3" />
-        <circle cx="380" cy="400" r="40" fill="none" stroke="#42B72A" strokeWidth="3" opacity="0.15" />
-        <circle cx="380" cy="400" r="10" fill="#42B72A" />
+        <rect width="512" height="512" rx="96" fill="#1A1A1A" />
+        {/* Red accent bar on left */}
+        <rect x="0" y="0" width="12" height="512" rx="6" fill="#CC0000" />
+        {/* RFE letters */}
+        <text x="256" y="240" textAnchor="middle" fill="#FFFFFF" fontFamily="Inter, Arial, sans-serif" fontWeight="800" fontSize="200" letterSpacing="-8">RFE</text>
+        {/* FOAM EQUIPMENT subtitle */}
+        <text x="256" y="340" textAnchor="middle" fill="#CC0000" fontFamily="Inter, Arial, sans-serif" fontWeight="700" fontSize="58" letterSpacing="12">FOAM</text>
+        <text x="256" y="400" textAnchor="middle" fill="#999999" fontFamily="Inter, Arial, sans-serif" fontWeight="600" fontSize="42" letterSpacing="8">EQUIPMENT</text>
     </svg>
 );
 
@@ -206,10 +195,10 @@ const App: React.FC = () => {
             <header className="sticky top-0 z-50 bg-white shadow-fb">
                 <div className="container flex items-center justify-between h-14 px-4 mx-auto max-w-6xl">
                     <div className="flex items-center gap-2.5">
-                        <GeoTimeLogo size={36} />
+                        <RFELogo size={36} />
                         <div className="flex flex-col">
-                            <h1 className="text-lg font-extrabold leading-tight text-fb-text tracking-tight">GeoTime</h1>
-                            <span className="text-[10px] font-medium text-fb-text-tertiary leading-none -mt-0.5 hidden sm:block">Time & Location Tracker</span>
+                            <h1 className="text-lg font-extrabold leading-tight text-fb-text tracking-tight">RFE</h1>
+                            <span className="text-[10px] font-medium text-fb-text-tertiary leading-none -mt-0.5 hidden sm:block">Foam Equipment</span>
                         </div>
                     </div>
 
@@ -332,7 +321,7 @@ const App: React.FC = () => {
                                     <button
                                         onClick={handleSwitchJob}
                                         disabled={isLoading}
-                                        className="flex items-center justify-center w-full mt-2 px-4 py-2.5 text-sm font-semibold text-fb-blue bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                                        className="flex items-center justify-center w-full mt-2 px-4 py-2.5 text-sm font-semibold text-fb-blue bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
                                     >
                                         <SwitchIcon />
                                         Switch to "{selectedProject}"
@@ -340,7 +329,7 @@ const App: React.FC = () => {
                                 )}
 
                                 {isClockedIn && (
-                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                    <div className="mt-4 p-3 bg-red-50 rounded-lg border border-red-100">
                                         <p className="text-sm font-semibold text-fb-blue">Current Job: {currentClockedInProject}</p>
                                         <p className="text-xs text-fb-text-secondary mt-1">
                                             <span className="inline-block w-2 h-2 bg-fb-green rounded-full mr-1.5 animate-pulse"></span>
@@ -508,7 +497,7 @@ const App: React.FC = () => {
                                 <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] bg-fb-blue rounded-b-full" />
                             )}
                             <div className={`flex items-center justify-center w-8 h-8 rounded-lg transition-colors ${
-                                activeTab === key ? 'bg-blue-50' : ''
+                                activeTab === key ? 'bg-red-50' : ''
                             }`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill={activeTab === key ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={activeTab === key ? 2 : 1.5} d={path} />

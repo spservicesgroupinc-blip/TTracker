@@ -31,12 +31,10 @@ const ProfileSetup: React.FC<ProfileSetupProps> = ({ onProfileSave }) => {
       <div className="w-full max-w-sm mx-4">
         {/* Logo + Title */}
         <div className="text-center mb-6">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-full bg-fb-blue mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-2xl bg-[#1A1A1A] mb-3">
+            <span className="text-2xl font-extrabold text-white tracking-tight">RFE</span>
           </div>
-          <h1 className="text-2xl font-bold text-fb-blue">GeoTime</h1>
+          <h1 className="text-2xl font-bold text-fb-blue">RFE Foam Equipment</h1>
           <p className="mt-1 text-sm text-fb-text-secondary">
             Track your time, anywhere.
           </p>

@@ -1,12 +1,12 @@
 {
-  "name": "GeoTime Tracker",
-  "short_name": "GeoTime",
-  "description": "Track your work hours with GPS location verification. Clock in/out, manage projects & jobs, and generate professional pay reports.",
+  "name": "RFE Time Tracker",
+  "short_name": "RFE Tracker",
+  "description": "RFE Foam Equipment — Track your work hours with GPS location verification. Clock in/out, manage projects & jobs, and generate professional pay reports.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#F0F2F5",
-  "theme_color": "#1877F2",
+  "background_color": "#F0F0F0",
+  "theme_color": "#CC0000",
   "orientation": "any",
   "id": "/",
   "categories": ["productivity", "business", "utilities"],
@@ -36,14 +36,14 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "form_factor": "wide",
-      "label": "GeoTime Tracker on Desktop"
+      "label": "RFE Time Tracker on Desktop"
     },
     {
       "src": "/icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "form_factor": "narrow",
-      "label": "GeoTime Tracker on Mobile"
+      "label": "RFE Time Tracker on Mobile"
     }
   ]
 }

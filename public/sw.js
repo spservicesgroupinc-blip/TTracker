@@ -1,4 +1,4 @@
-const CACHE_NAME = 'geotime-v1';
+const CACHE_NAME = 'rfe-tracker-v1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

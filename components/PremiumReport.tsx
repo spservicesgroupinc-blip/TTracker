@@ -207,7 +207,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         </div>
 
         {/* Preview Summary */}
-        <div className="p-4 bg-gradient-to-br from-fb-bg to-blue-50 rounded-lg border border-fb-divider">
+        <div className="p-4 bg-gradient-to-br from-fb-bg to-red-50 rounded-lg border border-fb-divider">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-semibold text-fb-text-secondary">
               {computedStart.toLocaleDateString()} — {computedEnd.toLocaleDateString()}

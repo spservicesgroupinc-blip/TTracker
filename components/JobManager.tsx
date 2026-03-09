@@ -7,7 +7,7 @@ interface JobManagerProps {
   onJobsChange: (jobs: Job[]) => void;
 }
 
-const JOB_COLORS = ['#1877F2', '#42B72A', '#F7B928', '#FA3E3C', '#A855F7', '#EC4899', '#14B8A6', '#F97316'];
+const JOB_COLORS = ['#CC0000', '#42B72A', '#F7B928', '#FA3E3C', '#A855F7', '#EC4899', '#14B8A6', '#F97316'];
 
 const PlusIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,7 +145,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
   const statusBadge = (status: Task['status']) => {
     const styles = {
       'pending': 'bg-gray-100 text-gray-600',
-      'in-progress': 'bg-blue-50 text-fb-blue',
+      'in-progress': 'bg-red-50 text-fb-blue',
       'completed': 'bg-green-50 text-fb-green',
     };
     const labels = { 'pending': 'Pending', 'in-progress': 'In Progress', 'completed': 'Done' };
@@ -356,7 +356,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange }) => {
                                     task.status === 'completed'
                                       ? 'bg-fb-green border-fb-green text-white'
                                       : task.status === 'in-progress'
-                                      ? 'bg-blue-50 border-fb-blue text-fb-blue'
+                                      ? 'bg-red-50 border-fb-blue text-fb-blue'
                                       : 'border-fb-divider hover:border-fb-blue'
                                   }`}
                                 >
