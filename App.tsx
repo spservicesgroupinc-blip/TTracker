@@ -1,9 +1,12 @@
 
 import React, { useState, useMemo } from 'react';
-import { UserProfile, TimeEntry, Coordinates } from './types';
+import { UserProfile, TimeEntry, Coordinates, Job, Photo } from './types';
 import useLocalStorage from './hooks/useLocalStorage';
 import ProfileSetup from './components/ProfileSetup';
 import TimeLog from './components/TimeLog';
+import JobManager from './components/JobManager';
+import PremiumReport from './components/PremiumReport';
+import PhotoUpload from './components/PhotoUpload';
 import { getCurrentPosition } from './services/locationService';
 import { generatePayReport } from './services/pdfService';
 
@@ -35,12 +38,17 @@ const App: React.FC = () => {
     const [profile, setProfile] = useLocalStorage<UserProfile | null>('user-profile', null);
     const [timeEntries, setTimeEntries] = useLocalStorage<TimeEntry[]>('time-entries', []);
     const [projects, setProjects] = useLocalStorage<string[]>('projects', ['General']);
+    const [jobs, setJobs] = useLocalStorage<Job[]>('jobs', []);
     
     // UI State
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [newProjectName, setNewProjectName] = useState('');
     const [selectedProject, setSelectedProject] = useState<string>(projects[0] || 'General');
+    const [selectedJobId, setSelectedJobId] = useState<string>('');
+    const [activeTab, setActiveTab] = useState<'clock' | 'jobs' | 'report'>('clock');
+    const [clockNotes, setClockNotes] = useState('');
+    const [clockPhotos, setClockPhotos] = useState<Photo[]>([]);
 
     const isClockedIn = useMemo(() => {
         const lastEntry = timeEntries.length > 0 ? timeEntries[timeEntries.length - 1] : null;
@@ -74,10 +82,15 @@ const App: React.FC = () => {
                 const newEntry: TimeEntry = {
                     id: new Date().toISOString(),
                     projectName: selectedProject,
+                    jobId: selectedJobId || undefined,
                     clockIn: new Date().toISOString(),
                     clockInLocation: location,
+                    notes: clockNotes.trim() || undefined,
+                    photos: clockPhotos.length > 0 ? [...clockPhotos] : undefined,
                 };
                 setTimeEntries([...timeEntries, newEntry]);
+                setClockNotes('');
+                setClockPhotos([]);
             }
         } catch (err: any) {
             setError(err.message || 'An unexpected error occurred.');
@@ -109,6 +122,7 @@ const App: React.FC = () => {
             const newEntry: TimeEntry = {
                 id: now,
                 projectName: selectedProject,
+                jobId: selectedJobId || undefined,
                 clockIn: now,
                 clockInLocation: location,
             };
@@ -194,9 +208,25 @@ const App: React.FC = () => {
             </header>
             
             <main className="container px-4 py-6 mx-auto max-w-6xl">
+                {/* Tab Navigation */}
+                <div className="flex gap-1 p-1 mb-4 bg-fb-card rounded-lg shadow-fb max-w-md">
+                    {([['clock', 'Time Clock'], ['jobs', 'Jobs & Tasks'], ['report', 'Reports']] as const).map(([key, label]) => (
+                        <button
+                            key={key}
+                            onClick={() => setActiveTab(key as any)}
+                            className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${
+                                activeTab === key ? 'bg-fb-blue text-white shadow-sm' : 'text-fb-text-secondary hover:bg-fb-bg'
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <div className="space-y-4 lg:col-span-1">
                         
+                        {activeTab === 'clock' && <>
                         {/* Time Clock Card */}
                         <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
                             <div className="px-4 py-3 border-b border-fb-divider">
@@ -204,7 +234,7 @@ const App: React.FC = () => {
                             </div>
                             <div className="p-4">
                                 {/* Project Selector */}
-                                <div className="mb-4">
+                                <div className="mb-3">
                                     <label className="block mb-1.5 text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">
                                         {isClockedIn ? 'Switch Project' : 'Select Project'}
                                     </label>
@@ -218,6 +248,37 @@ const App: React.FC = () => {
                                         ))}
                                     </select>
                                 </div>
+
+                                {/* Link to Job */}
+                                {jobs.length > 0 && (
+                                    <div className="mb-3">
+                                        <label className="block mb-1.5 text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">Link to Job</label>
+                                        <select
+                                            value={selectedJobId}
+                                            onChange={(e) => setSelectedJobId(e.target.value)}
+                                            className="block w-full px-3 py-2.5 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                                        >
+                                            <option value="">No job (use default rate)</option>
+                                            {jobs.map(j => (
+                                                <option key={j.id} value={j.id}>{j.name}{j.client ? ` — ${j.client}` : ''}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+
+                                {/* Notes & Photos for clock-in */}
+                                {!isClockedIn && (
+                                    <div className="mb-4 space-y-2">
+                                        <input
+                                            type="text"
+                                            value={clockNotes}
+                                            onChange={(e) => setClockNotes(e.target.value)}
+                                            placeholder="Add notes (optional)..."
+                                            className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors placeholder-fb-text-tertiary"
+                                        />
+                                        <PhotoUpload photos={clockPhotos} onPhotosChange={setClockPhotos} maxPhotos={5} />
+                                    </div>
+                                )}
 
                                 <button
                                     onClick={handleClockToggle}
@@ -306,10 +367,10 @@ const App: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Reports */}
+                        {/* Quick Report */}
                         <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
                             <div className="px-4 py-3 border-b border-fb-divider">
-                                <h2 className="text-base font-bold text-fb-text">Reports</h2>
+                                <h2 className="text-base font-bold text-fb-text">Quick Report</h2>
                             </div>
                             <div className="p-4">
                                 <button
@@ -318,14 +379,23 @@ const App: React.FC = () => {
                                     className="flex items-center justify-center w-full px-4 py-2.5 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors disabled:bg-fb-divider disabled:text-fb-text-tertiary disabled:cursor-not-allowed"
                                 >
                                     <DownloadIcon />
-                                    Download Pay Report (PDF)
+                                    Download Basic Report (PDF)
                                 </button>
                             </div>
                         </div>
+                        </>}
+
+                        {activeTab === 'jobs' && (
+                            <JobManager jobs={jobs} onJobsChange={setJobs} />
+                        )}
+
+                        {activeTab === 'report' && (
+                            <PremiumReport profile={profile} timeEntries={timeEntries} jobs={jobs} />
+                        )}
                     </div>
                     
                     <div className="lg:col-span-2">
-                       <TimeLog timeEntries={timeEntries} profile={profile} />
+                       <TimeLog timeEntries={timeEntries} profile={profile} jobs={jobs} />
                     </div>
                 </div>
             </main>

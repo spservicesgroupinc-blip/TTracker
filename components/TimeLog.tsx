@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { TimeEntry, UserProfile } from '../types';
+import { TimeEntry, UserProfile, Job } from '../types';
 
 interface TimeLogProps {
   timeEntries: TimeEntry[];
   profile: UserProfile;
+  jobs?: Job[];
 }
 
 const MapPinIcon = () => (
@@ -32,7 +33,7 @@ const LocationLink: React.FC<{ location?: { latitude: number; longitude: number;
     );
 };
 
-const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile }) => {
+const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile, jobs = [] }) => {
     const calculateDuration = (clockIn: string, clockOut?: string): number => {
         if (!clockOut) return 0;
         const start = new Date(clockIn).getTime();
@@ -56,7 +57,9 @@ const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile }) => {
                 {sortedEntries.length > 0 ? (
                     sortedEntries.map((entry) => {
                         const duration = calculateDuration(entry.clockIn, entry.clockOut);
-                        const pay = duration * profile.hourlyWage;
+                        const job = entry.jobId ? jobs.find(j => j.id === entry.jobId) : null;
+                        const rate = job?.hourlyRate || profile.hourlyWage;
+                        const pay = duration * rate;
                         const isActive = !entry.clockOut;
                         return (
                             <div key={entry.id} className={`px-4 py-3 hover:bg-fb-hover-bg transition-colors ${isActive ? 'bg-blue-50/50' : ''}`}>
@@ -67,6 +70,12 @@ const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile }) => {
                                             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-fb-blue/10 text-fb-blue">
                                                 {entry.projectName || 'General'}
                                             </span>
+                                            {job && (
+                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold" style={{ backgroundColor: `${job.color}15`, color: job.color }}>
+                                                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: job.color }} />
+                                                    {job.name}
+                                                </span>
+                                            )}
                                             {isActive && (
                                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-fb-green/10 text-fb-green">
                                                     <span className="w-1.5 h-1.5 bg-fb-green rounded-full animate-pulse"></span>
@@ -85,6 +94,16 @@ const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile }) => {
                                             </span>
                                             {entry.clockOut && <LocationLink location={entry.clockOutLocation} />}
                                         </div>
+                                        {entry.notes && (
+                                            <p className="mt-1.5 text-xs text-fb-text-secondary italic">📝 {entry.notes}</p>
+                                        )}
+                                        {entry.photos && entry.photos.length > 0 && (
+                                            <div className="mt-2 flex gap-1.5 flex-wrap">
+                                                {entry.photos.map(photo => (
+                                                    <img key={photo.id} src={photo.dataUrl} alt={photo.caption} className="w-12 h-12 rounded-md object-cover border border-fb-divider" />
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex items-center gap-3 sm:text-right shrink-0">
                                         <div className={`px-3 py-1.5 rounded-lg ${isActive ? 'bg-fb-green/10' : 'bg-fb-bg'}`}>
@@ -93,6 +112,9 @@ const TimeLog: React.FC<TimeLogProps> = ({ timeEntries, profile }) => {
                                             </p>
                                             {pay > 0 && (
                                                 <p className="text-xs font-semibold text-fb-green">${pay.toFixed(2)}</p>
+                                            )}
+                                            {job && job.hourlyRate > 0 && (
+                                                <p className="text-[10px] text-fb-text-tertiary">${job.hourlyRate.toFixed(2)}/hr</p>
                                             )}
                                         </div>
                                     </div>
