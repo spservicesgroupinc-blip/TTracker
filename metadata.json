@@ -1,0 +1,7 @@
+{
+  "name": "GeoTime Tracker",
+  "description": "A GPS-stamped time tracking app for construction employees to clock in/out, track hours, and generate pay reports.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
