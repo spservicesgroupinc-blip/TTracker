@@ -19,6 +19,18 @@ const TrashIcon = () => (
     </svg>
 );
 
+const DownloadIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+);
+
+const SwitchIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+);
+
 const App: React.FC = () => {
     const [profile, setProfile] = useLocalStorage<UserProfile | null>('user-profile', null);
     const [timeEntries, setTimeEntries] = useLocalStorage<TimeEntry[]>('time-entries', []);
@@ -48,7 +60,6 @@ const App: React.FC = () => {
             const location: Coordinates = await getCurrentPosition();
 
             if (isClockedIn) {
-                // Clocking out
                 const lastEntry = timeEntries[timeEntries.length - 1];
                 const updatedEntry: TimeEntry = {
                     ...lastEntry,
@@ -60,7 +71,6 @@ const App: React.FC = () => {
                     updatedEntry
                 ]);
             } else {
-                // Clocking in
                 const newEntry: TimeEntry = {
                     id: new Date().toISOString(),
                     projectName: selectedProject,
@@ -89,7 +99,6 @@ const App: React.FC = () => {
             const location: Coordinates = await getCurrentPosition();
             const now = new Date().toISOString();
 
-            // 1. Clock out of current
             const lastEntry = timeEntries[timeEntries.length - 1];
             const closedEntry: TimeEntry = {
                 ...lastEntry,
@@ -97,9 +106,8 @@ const App: React.FC = () => {
                 clockOutLocation: location,
             };
 
-            // 2. Clock in to new
             const newEntry: TimeEntry = {
-                id: now, // using timestamp as ID
+                id: now,
                 projectName: selectedProject,
                 clockIn: now,
                 clockInLocation: location,
@@ -131,7 +139,6 @@ const App: React.FC = () => {
         if (trimmed && !projects.includes(trimmed)) {
             setProjects([...projects, trimmed]);
             setNewProjectName('');
-            // If it's the only project, select it
             if (projects.length === 0) setSelectedProject(trimmed);
         }
     };
@@ -151,130 +158,169 @@ const App: React.FC = () => {
     if (!profile) {
         return <ProfileSetup onProfileSave={setProfile} />;
     }
-
-    const clockInButtonClasses = "w-full text-white bg-green-600 hover:bg-green-700 focus:ring-green-500";
-    const clockOutButtonClasses = "w-full text-white bg-red-600 hover:bg-red-700 focus:ring-red-500";
-    const switchJobButtonClasses = "w-full mt-2 text-indigo-700 bg-indigo-100 hover:bg-indigo-200 border border-indigo-200";
     
     return (
-        <div className="min-h-screen text-gray-800 bg-slate-100">
-            <header className="p-4 text-white bg-slate-800 shadow-md">
-                <div className="container flex items-center justify-between mx-auto">
-                    <h1 className="text-2xl font-bold">GeoTime Tracker</h1>
-                    <div className="text-right">
-                        <p className="font-semibold">{profile.name}</p>
-                        <button onClick={handleResetProfile} className="text-xs text-slate-300 hover:underline">
-                            Switch Profile
+        <div className="min-h-screen text-fb-text bg-fb-bg font-fb">
+            {/* Facebook-style top header bar */}
+            <header className="sticky top-0 z-50 bg-white shadow-fb">
+                <div className="container flex items-center justify-between h-14 px-4 mx-auto">
+                    <div className="flex items-center gap-2">
+                        {/* Facebook-style logo circle */}
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-fb-blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h1 className="text-xl font-bold text-fb-blue">GeoTime</h1>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-fb-bg">
+                            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-fb-blue text-white text-xs font-bold">
+                                {profile.name.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="text-sm font-semibold text-fb-text hidden sm:inline">{profile.name}</span>
+                        </div>
+                        <button
+                            onClick={handleResetProfile}
+                            className="flex items-center justify-center w-9 h-9 rounded-full bg-fb-active-bg hover:bg-fb-divider transition-colors"
+                            title="Switch Profile"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-fb-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
                         </button>
                     </div>
                 </div>
             </header>
             
-            <main className="container p-4 mx-auto md:p-6">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="space-y-6 lg:col-span-1">
+            <main className="container px-4 py-6 mx-auto max-w-6xl">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    <div className="space-y-4 lg:col-span-1">
                         
                         {/* Time Clock Card */}
-                        <div className="p-6 bg-white rounded-lg shadow-md">
-                            <h2 className="mb-4 text-xl font-bold text-gray-800">Time Clock</h2>
-                            
-                            {/* Project Selector */}
-                            <div className="mb-4">
-                                <label className="block mb-1 text-sm font-medium text-gray-700">
-                                    {isClockedIn ? 'Switch Project' : 'Select Project'}
-                                </label>
-                                <select
-                                    value={selectedProject}
-                                    onChange={(e) => setSelectedProject(e.target.value)}
-                                    className="block w-full px-3 py-2 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border"
-                                >
-                                    {projects.map(p => (
-                                        <option key={p} value={p}>{p}</option>
-                                    ))}
-                                </select>
+                        <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
+                            <div className="px-4 py-3 border-b border-fb-divider">
+                                <h2 className="text-base font-bold text-fb-text">Time Clock</h2>
                             </div>
-
-                            <button
-                                onClick={handleClockToggle}
-                                disabled={isLoading}
-                                className={`flex items-center justify-center px-6 py-3 text-lg font-semibold rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-wait ${
-                                    isClockedIn ? clockOutButtonClasses : clockInButtonClasses
-                                }`}
-                            >
-                                <ClockIcon/>
-                                {isLoading ? 'Getting Location...' : (isClockedIn ? 'Clock Out' : 'Clock In')}
-                            </button>
-
-                            {/* Switch Job Action */}
-                            {isClockedIn && selectedProject !== currentClockedInProject && (
-                                <button
-                                    onClick={handleSwitchJob}
-                                    disabled={isLoading}
-                                    className={`flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md shadow-sm transition-colors ${switchJobButtonClasses}`}
-                                >
-                                    Switch to "{selectedProject}"
-                                </button>
-                            )}
-
-                            {isClockedIn && (
-                                <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100">
-                                    <p className="text-sm font-medium text-blue-800">Current Job: {currentClockedInProject}</p>
-                                    <p className="text-xs text-blue-600 animate-pulse mt-1">
-                                        Clocked in since {new Date(timeEntries[timeEntries.length-1].clockIn).toLocaleTimeString()}
-                                    </p>
+                            <div className="p-4">
+                                {/* Project Selector */}
+                                <div className="mb-4">
+                                    <label className="block mb-1.5 text-xs font-semibold text-fb-text-secondary uppercase tracking-wide">
+                                        {isClockedIn ? 'Switch Project' : 'Select Project'}
+                                    </label>
+                                    <select
+                                        value={selectedProject}
+                                        onChange={(e) => setSelectedProject(e.target.value)}
+                                        className="block w-full px-3 py-2.5 text-sm text-fb-text bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                                    >
+                                        {projects.map(p => (
+                                            <option key={p} value={p}>{p}</option>
+                                        ))}
+                                    </select>
                                 </div>
-                            )}
-                            
-                            {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+
+                                <button
+                                    onClick={handleClockToggle}
+                                    disabled={isLoading}
+                                    className={`flex items-center justify-center w-full px-6 py-3 text-base font-bold rounded-lg transition-all duration-150 disabled:opacity-50 disabled:cursor-wait ${
+                                        isClockedIn
+                                            ? 'text-white bg-fb-red hover:brightness-95 active:scale-[0.98]'
+                                            : 'text-white bg-fb-green hover:bg-fb-green-hover active:scale-[0.98]'
+                                    }`}
+                                >
+                                    <ClockIcon/>
+                                    {isLoading ? 'Getting Location...' : (isClockedIn ? 'Clock Out' : 'Clock In')}
+                                </button>
+
+                                {/* Switch Job Action */}
+                                {isClockedIn && selectedProject !== currentClockedInProject && (
+                                    <button
+                                        onClick={handleSwitchJob}
+                                        disabled={isLoading}
+                                        className="flex items-center justify-center w-full mt-2 px-4 py-2.5 text-sm font-semibold text-fb-blue bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                                    >
+                                        <SwitchIcon />
+                                        Switch to "{selectedProject}"
+                                    </button>
+                                )}
+
+                                {isClockedIn && (
+                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                        <p className="text-sm font-semibold text-fb-blue">Current Job: {currentClockedInProject}</p>
+                                        <p className="text-xs text-fb-text-secondary mt-1">
+                                            <span className="inline-block w-2 h-2 bg-fb-green rounded-full mr-1.5 animate-pulse"></span>
+                                            Clocked in since {new Date(timeEntries[timeEntries.length-1].clockIn).toLocaleTimeString()}
+                                        </p>
+                                    </div>
+                                )}
+                                
+                                {error && (
+                                    <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-100">
+                                        <p className="text-sm text-fb-red">{error}</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Project Management */}
-                        <div className="p-6 bg-white rounded-lg shadow-md">
-                            <h2 className="mb-4 text-xl font-bold text-gray-800">Manage Projects</h2>
-                            <form onSubmit={handleAddProject} className="flex gap-2 mb-4">
-                                <input 
-                                    type="text" 
-                                    value={newProjectName}
-                                    onChange={(e) => setNewProjectName(e.target.value)}
-                                    placeholder="New Project Name"
-                                    className="flex-1 min-w-0 block w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                />
-                                <button 
-                                    type="submit"
-                                    disabled={!newProjectName.trim()}
-                                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-slate-600 border border-transparent rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50"
-                                >
-                                    Add
-                                </button>
-                            </form>
-                            <ul className="divide-y divide-gray-200 max-h-48 overflow-y-auto">
-                                {projects.map(proj => (
-                                    <li key={proj} className="py-2 flex justify-between items-center">
-                                        <span className="text-sm text-gray-700">{proj}</span>
-                                        {projects.length > 1 && (
-                                            <button 
-                                                onClick={() => handleDeleteProject(proj)}
-                                                className="text-red-400 hover:text-red-600 p-1"
-                                                title="Delete Project"
-                                            >
-                                                <TrashIcon />
-                                            </button>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
+                            <div className="px-4 py-3 border-b border-fb-divider">
+                                <h2 className="text-base font-bold text-fb-text">Manage Projects</h2>
+                            </div>
+                            <div className="p-4">
+                                <form onSubmit={handleAddProject} className="flex gap-2 mb-3">
+                                    <input 
+                                        type="text" 
+                                        value={newProjectName}
+                                        onChange={(e) => setNewProjectName(e.target.value)}
+                                        placeholder="New project name..."
+                                        className="flex-1 min-w-0 block w-full px-3 py-2 text-sm bg-fb-bg rounded-lg border border-fb-input-border focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue placeholder-fb-text-tertiary transition-colors"
+                                    />
+                                    <button 
+                                        type="submit"
+                                        disabled={!newProjectName.trim()}
+                                        className="inline-flex justify-center px-4 py-2 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors disabled:opacity-40"
+                                    >
+                                        Add
+                                    </button>
+                                </form>
+                                <ul className="divide-y divide-fb-divider max-h-48 overflow-y-auto">
+                                    {projects.map(proj => (
+                                        <li key={proj} className="py-2 flex justify-between items-center group">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-fb-blue"></div>
+                                                <span className="text-sm text-fb-text">{proj}</span>
+                                            </div>
+                                            {projects.length > 1 && (
+                                                <button 
+                                                    onClick={() => handleDeleteProject(proj)}
+                                                    className="opacity-0 group-hover:opacity-100 text-fb-text-tertiary hover:text-fb-red p-1 rounded transition-all"
+                                                    title="Delete Project"
+                                                >
+                                                    <TrashIcon />
+                                                </button>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
 
                         {/* Reports */}
-                        <div className="p-6 bg-white rounded-lg shadow-md">
-                            <h2 className="mb-4 text-xl font-bold text-gray-800">Reports</h2>
-                            <button
-                                onClick={() => generatePayReport(profile, timeEntries)}
-                                disabled={timeEntries.length === 0}
-                                className="w-full px-4 py-2 font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                            >
-                                Download Pay Report (PDF)
-                            </button>
+                        <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
+                            <div className="px-4 py-3 border-b border-fb-divider">
+                                <h2 className="text-base font-bold text-fb-text">Reports</h2>
+                            </div>
+                            <div className="p-4">
+                                <button
+                                    onClick={() => generatePayReport(profile, timeEntries)}
+                                    disabled={timeEntries.length === 0}
+                                    className="flex items-center justify-center w-full px-4 py-2.5 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors disabled:bg-fb-divider disabled:text-fb-text-tertiary disabled:cursor-not-allowed"
+                                >
+                                    <DownloadIcon />
+                                    Download Pay Report (PDF)
+                                </button>
+                            </div>
                         </div>
                     </div>
                     

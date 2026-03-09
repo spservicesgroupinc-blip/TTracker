@@ -7,6 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GeoTime Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              fb: {
+                blue: '#1877F2',
+                'blue-hover': '#166FE5',
+                'blue-dark': '#1565C0',
+                green: '#42B72A',
+                'green-hover': '#36A420',
+                red: '#FA3E3C',
+                bg: '#F0F2F5',
+                card: '#FFFFFF',
+                text: '#050505',
+                'text-secondary': '#65676B',
+                'text-tertiary': '#8A8D91',
+                divider: '#CED0D4',
+                'input-border': '#DDDFE2',
+                'input-focus': '#1877F2',
+                'hover-bg': '#F2F2F2',
+                'active-bg': '#E4E6EB',
+              },
+            },
+            fontFamily: {
+              fb: ['Segoe UI', 'Helvetica', 'Arial', 'sans-serif'],
+            },
+            boxShadow: {
+              'fb': '0 1px 2px rgba(0, 0, 0, 0.1)',
+              'fb-lg': '0 2px 8px rgba(0, 0, 0, 0.1)',
+              'fb-xl': '0 8px 30px rgba(0, 0, 0, 0.12)',
+            },
+          },
+        },
+      }
+    </script>
   <script type="importmap">
 {
   "imports": {
@@ -19,7 +55,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-100">
+  <body class="bg-fb-bg font-fb">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
