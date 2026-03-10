@@ -9,7 +9,7 @@ interface JobManagerProps {
   onSelectJob?: (jobId: string) => void;
 }
 
-const JOB_COLORS = ['#CC0000', '#42B72A', '#F7B928', '#FA3E3C', '#A855F7', '#EC4899', '#14B8A6', '#F97316'];
+const JOB_COLORS = ['#0E5FD8', '#0EA567', '#D97E00', '#0B7A75', '#C73B2F', '#7A4DE6', '#0087A8', '#304A7A'];
 
 const PlusIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,22 +168,22 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
 
   return (
     <div className="space-y-4">
-      <div className="bg-fb-card rounded-xl shadow-fb overflow-hidden">
-        <div className="px-4 py-4 border-b border-fb-divider flex items-start justify-between gap-3">
+      <div className="overflow-hidden rounded-3xl border border-fb-divider bg-fb-card shadow-fb-lg">
+        <div className="flex items-start justify-between gap-3 border-b border-fb-divider px-4 py-4 sm:px-5">
           <div>
-            <h2 className="text-base font-bold text-fb-text">Jobs & Tasks</h2>
-            <p className="text-xs text-fb-text-tertiary mt-0.5">Open a job to work through its checklist and photos.</p>
+            <h2 className="font-display text-lg font-extrabold text-fb-text">Jobs & Tasks</h2>
+            <p className="mt-0.5 text-xs font-medium text-fb-text-tertiary">Open a job to manage scope, checklist states, and photo evidence.</p>
           </div>
           <button
             onClick={() => setShowCreateJob((current) => !current)}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-fb-blue to-fb-blue-dark px-3 py-2 text-xs font-extrabold text-white hover:brightness-95"
           >
             <PlusIcon /> New Job
           </button>
         </div>
 
         {showCreateJob && (
-          <div className="p-4 border-b border-fb-divider bg-fb-bg">
+          <div className="border-b border-fb-divider bg-fb-bg p-4">
             <form onSubmit={handleCreateJob} className="space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Job Name *</label>
@@ -192,7 +192,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                   value={jobName}
                   onChange={(e) => setJobName(e.target.value)}
                   placeholder="e.g., Kitchen Renovation"
-                  className="block w-full px-3 py-3 text-sm bg-white border border-fb-input-border rounded-xl focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                  className="block w-full rounded-xl border border-fb-input-border bg-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
                   required
                   autoFocus
                 />
@@ -204,7 +204,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                   onChange={(e) => setJobDescription(e.target.value)}
                   placeholder="Job details..."
                   rows={3}
-                  className="block w-full px-3 py-3 text-sm bg-white border border-fb-input-border rounded-xl focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors resize-none"
+                  className="block w-full resize-none rounded-xl border border-fb-input-border bg-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
                 />
               </div>
               <div>
@@ -214,7 +214,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                   value={jobAddress}
                   onChange={(e) => setJobAddress(e.target.value)}
                   placeholder="e.g., 123 Main St, City, ST"
-                  className="block w-full px-3 py-3 text-sm bg-white border border-fb-input-border rounded-xl focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                  className="block w-full rounded-xl border border-fb-input-border bg-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
                 />
               </div>
               <div className="flex gap-2 justify-end">
@@ -231,7 +231,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                 <button
                   type="submit"
                   disabled={!jobName.trim()}
-                  className="px-4 py-3 text-sm font-bold text-white bg-fb-blue rounded-xl hover:bg-fb-blue-hover transition-colors disabled:opacity-40"
+                  className="rounded-xl bg-fb-blue px-4 py-3 text-sm font-extrabold text-white hover:bg-fb-blue-hover disabled:opacity-40"
                 >
                   Create Job
                 </button>
@@ -242,7 +242,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
       </div>
 
       {jobs.length === 0 ? (
-        <div className="bg-fb-card rounded-xl shadow-fb px-6 py-12 text-center">
+        <div className="rounded-3xl border border-fb-divider bg-fb-card px-6 py-12 text-center shadow-fb">
           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-fb-bg flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-fb-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.193 23.193 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -266,10 +266,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
             });
 
             return (
-              <div
-                key={job.id}
-                className={`bg-fb-card rounded-xl shadow-fb overflow-hidden border ${selectedJobId === job.id ? 'border-red-200' : 'border-transparent'}`}
-              >
+              <div key={job.id} className={`overflow-hidden rounded-2xl border bg-fb-card shadow-fb ${selectedJobId === job.id ? 'border-sky-200' : 'border-fb-divider'}`}>
                 <button
                   onClick={() => setExpandedJobId(isExpanded ? null : job.id)}
                   className="w-full p-4 text-left hover:bg-fb-hover-bg transition-colors"

@@ -27,43 +27,35 @@ const ProfileSetup: React.FC<ProfileSetupProps> = ({ onProfileSave }) => {
   };
 
   return (
-    <div className="flex items-start sm:items-center justify-center min-h-screen bg-fb-bg font-fb px-4 py-6 sm:py-0">
-      <div className="w-full max-w-sm">
-        {/* Logo + Title */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-2xl bg-[#1A1A1A] mb-3">
-            <span className="text-2xl font-extrabold text-white tracking-tight">RFE</span>
+    <div className="min-h-screen px-4 py-8 sm:grid sm:place-items-center">
+      <div className="w-full max-w-md">
+        <div className="mb-6 text-center">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-fb-blue to-fb-green shadow-fb-lg">
+            <span className="font-display text-2xl font-extrabold text-white tracking-tight">RFE</span>
           </div>
-          <h1 className="text-2xl font-bold text-fb-blue">RFE Foam Equipment</h1>
-          <p className="mt-1 text-sm text-fb-text-secondary">
-            Track your time, anywhere.
-          </p>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-fb-text">Field OS</h1>
+          <p className="mt-1 text-sm font-semibold text-fb-text-secondary">Set up once, then track work like a pro.</p>
         </div>
 
-        {/* Card */}
-        <div className="p-5 bg-fb-card rounded-lg shadow-fb-xl">
-          <h2 className="text-lg font-bold text-center text-fb-text mb-1">
-            Create Your Profile
-          </h2>
-          <p className="text-xs text-center text-fb-text-secondary mb-5">
-            Set up your details to get started.
-          </p>
+        <div className="rounded-3xl border border-fb-divider bg-fb-card p-6 shadow-fb-xl">
+          <h2 className="font-display text-xl font-extrabold text-fb-text">Create Profile</h2>
+          <p className="mb-5 mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-fb-text-tertiary">Local-only, private data</p>
           <form className="space-y-3" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold text-fb-text-secondary mb-1">Full Name</label>
+              <label htmlFor="name" className="mb-1 block text-xs font-bold uppercase tracking-wide text-fb-text-secondary">Full Name</label>
               <input
                 id="name"
                 name="name"
                 type="text"
                 required
-                className="block w-full px-4 py-3 text-base text-fb-text bg-fb-bg placeholder-fb-text-tertiary border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                className="block w-full rounded-xl border border-fb-input-border bg-fb-bg px-4 py-3 text-base text-fb-text placeholder-fb-text-tertiary focus:border-fb-blue focus:outline-none focus:ring-2 focus:ring-fb-blue"
                 placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor="hourly-wage" className="block text-xs font-semibold text-fb-text-secondary mb-1">Hourly Wage</label>
+              <label htmlFor="hourly-wage" className="mb-1 block text-xs font-bold uppercase tracking-wide text-fb-text-secondary">Hourly Wage</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-fb-text-tertiary text-base font-medium">$</span>
                 <input
@@ -71,7 +63,7 @@ const ProfileSetup: React.FC<ProfileSetupProps> = ({ onProfileSave }) => {
                   name="hourly-wage"
                   type="number"
                   required
-                  className="block w-full pl-8 pr-4 py-3 text-base text-fb-text bg-fb-bg placeholder-fb-text-tertiary border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue focus:border-fb-blue transition-colors"
+                  className="block w-full rounded-xl border border-fb-input-border bg-fb-bg py-3 pl-8 pr-4 text-base text-fb-text placeholder-fb-text-tertiary focus:border-fb-blue focus:outline-none focus:ring-2 focus:ring-fb-blue"
                   placeholder="0.00"
                   value={hourlyWage}
                   onChange={(e) => setHourlyWage(e.target.value)}
@@ -82,21 +74,21 @@ const ProfileSetup: React.FC<ProfileSetupProps> = ({ onProfileSave }) => {
             </div>
 
             {error && (
-              <div className="p-3 bg-red-50 rounded-lg border border-red-100">
+              <div className="rounded-xl border border-red-100 bg-red-50 p-3">
                 <p className="text-sm text-fb-red">{error}</p>
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full px-4 py-3 text-base font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover active:scale-[0.98] transition-all"
+              className="w-full rounded-xl bg-gradient-to-r from-fb-blue to-fb-blue-dark px-4 py-3 text-base font-extrabold text-white shadow-fb transition hover:brightness-95 active:scale-[0.98]"
             >
               Get Started
             </button>
           </form>
         </div>
 
-        <p className="mt-5 text-xs text-center text-fb-text-tertiary">
+        <p className="mt-5 text-center text-xs font-semibold text-fb-text-tertiary">
           Your data is stored locally on this device.
         </p>
       </div>

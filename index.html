@@ -4,20 +4,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>RFE Time Tracker</title>
+    <title>RFE Field OS</title>
 
     <!-- PWA Meta Tags -->
-    <meta name="description" content="RFE Foam Equipment — Track your work hours with GPS location verification" />
-    <meta name="theme-color" content="#CC0000" />
+    <meta name="description" content="RFE Field OS - premium field operations tracker with GPS-verified time, jobs, and reports" />
+    <meta name="theme-color" content="#0E5FD8" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="RFE Tracker" />
+    <meta name="apple-mobile-web-app-title" content="RFE Field OS" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Sora:wght@600;700;800&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet" />
 
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
@@ -31,41 +31,47 @@
           extend: {
             colors: {
               fb: {
-                blue: '#CC0000',
-                'blue-hover': '#B30000',
-                'blue-dark': '#990000',
-                green: '#42B72A',
-                'green-hover': '#36A420',
-                red: '#FA3E3C',
-                bg: '#F0F0F0',
+                blue: '#0E5FD8',
+                'blue-hover': '#0A4FB6',
+                'blue-dark': '#073E8D',
+                green: '#0EA567',
+                'green-hover': '#0B8A56',
+                red: '#C73B2F',
+                bg: '#EEF3FA',
                 card: '#FFFFFF',
-                text: '#1A1A1A',
-                'text-secondary': '#555555',
-                'text-tertiary': '#888888',
-                divider: '#D0D0D0',
-                'input-border': '#CCCCCC',
-                'input-focus': '#CC0000',
-                'hover-bg': '#F2F2F2',
-                'active-bg': '#E5E5E5',
+                text: '#142033',
+                'text-secondary': '#31445E',
+                'text-tertiary': '#5F7391',
+                divider: '#D4DFEE',
+                'input-border': '#C4D3E7',
+                'input-focus': '#0E5FD8',
+                'hover-bg': '#F5F9FF',
+                'active-bg': '#E7EFFB',
               },
             },
             fontFamily: {
-              fb: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-              mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+              fb: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+              display: ['Sora', 'Manrope', 'system-ui', 'sans-serif'],
+              mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
             },
             boxShadow: {
-              'fb': '0 1px 2px rgba(0, 0, 0, 0.1)',
-              'fb-lg': '0 2px 8px rgba(0, 0, 0, 0.1)',
-              'fb-xl': '0 8px 30px rgba(0, 0, 0, 0.12)',
+              'fb': '0 2px 10px rgba(20, 32, 51, 0.08)',
+              'fb-lg': '0 8px 26px rgba(20, 32, 51, 0.12)',
+              'fb-xl': '0 20px 60px rgba(20, 32, 51, 0.2)',
             },
             keyframes: {
               'slide-up': {
                 '0%': { transform: 'translateY(100%)', opacity: '0' },
                 '100%': { transform: 'translateY(0)', opacity: '1' },
               },
+              'fade-rise': {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
             },
             animation: {
               'slide-up': 'slide-up 0.3s ease-out',
+              'fade-rise': 'fade-rise 0.5s ease-out',
             },
           },
         },
@@ -73,6 +79,12 @@
     </script>
     <style>
       .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      body {
+        background:
+          radial-gradient(circle at 10% -10%, rgba(14,95,216,0.16), transparent 32%),
+          radial-gradient(circle at 85% -20%, rgba(14,165,103,0.15), transparent 38%),
+          linear-gradient(180deg, #f9fbff 0%, #eef3fa 100%);
+      }
       @media (max-width: 767px) {
         .pb-16 { padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)); }
       }

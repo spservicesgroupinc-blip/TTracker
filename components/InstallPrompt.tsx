@@ -47,28 +47,28 @@ const InstallPrompt: React.FC = () => {
   if (isInstalled || dismissed || !deferredPrompt) return null;
 
   return (
-    <div className="fixed bottom-20 md:bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 bg-white rounded-xl shadow-fb-xl border border-fb-divider p-4 animate-slide-up">
+    <div className="fixed bottom-20 left-4 right-4 z-50 animate-slide-up rounded-2xl border border-fb-divider bg-white p-4 shadow-fb-xl md:bottom-4 sm:left-auto sm:right-4 sm:w-80">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#1A1A1A] flex items-center justify-center shrink-0">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-fb-blue to-fb-green">
           <span className="text-xs font-extrabold text-white tracking-tight">RFE</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-fb-text">Install RFE Tracker</p>
-          <p className="text-xs text-fb-text-secondary mt-0.5">
+          <p className="text-sm font-extrabold text-fb-text">Install Field OS</p>
+          <p className="mt-0.5 text-xs font-medium text-fb-text-secondary">
             {isMobile
               ? 'Add to your Home Screen for faster launch and better offline use.'
               : 'Install as an app for quick access and offline support.'}
           </p>
-          <div className="flex gap-2 mt-3">
+          <div className="mt-3 flex gap-2">
             <button
               onClick={handleInstall}
-              className="flex-1 px-3 py-2 text-xs font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-colors"
+              className="flex-1 rounded-lg bg-gradient-to-r from-fb-blue to-fb-blue-dark px-3 py-2 text-xs font-extrabold text-white hover:brightness-95"
             >
               Install
             </button>
             <button
               onClick={() => setDismissed(true)}
-              className="px-3 py-2 text-xs font-semibold text-fb-text-secondary bg-fb-active-bg rounded-lg hover:bg-fb-divider transition-colors"
+              className="rounded-lg bg-fb-active-bg px-3 py-2 text-xs font-bold text-fb-text-secondary hover:bg-fb-divider"
             >
               Not now
             </button>

@@ -110,25 +110,25 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
   };
 
   return (
-    <div className="bg-fb-card rounded-lg shadow-fb overflow-hidden">
-      <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-fb-divider">
+    <div className="overflow-hidden rounded-3xl border border-fb-divider bg-fb-card shadow-fb-lg">
+      <div className="border-b border-fb-divider bg-gradient-to-r from-fb-blue to-fb-blue-dark px-4 py-4 text-white sm:px-6">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm sm:text-base font-bold text-fb-text">Premium Pay Report</h2>
-          <span className="px-2 py-0.5 text-[10px] font-bold text-white bg-fb-blue rounded-full uppercase tracking-wider">Pro</span>
+          <h2 className="font-display text-lg font-extrabold">Premium Pay Report</h2>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">Pro</span>
         </div>
+        <p className="mt-1 text-xs font-medium text-white/85">Generate polished PDF payroll reports with optional task and photo evidence.</p>
       </div>
 
-      <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
-        {/* Period Selector */}
+      <div className="space-y-5 p-4 sm:p-6">
         <div>
-          <label className="block text-xs font-semibold text-fb-text-secondary mb-1.5 uppercase tracking-wide">Report Period</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-fb-bg rounded-lg">
+          <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.16em] text-fb-text-secondary">Report Period</label>
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-fb-bg p-1 sm:grid-cols-4">
             {(['weekly', 'biweekly', 'monthly', 'custom'] as const).map(type => (
               <button
                 key={type}
                 onClick={() => setPeriodType(type)}
-                className={`py-1.5 sm:py-2 text-[10px] sm:text-xs font-semibold rounded-md transition-all ${
-                  periodType === type ? 'bg-white text-fb-blue shadow-sm' : 'text-fb-text-secondary hover:text-fb-text'
+                className={`rounded-lg py-2 text-[11px] font-bold transition sm:text-xs ${
+                  periodType === type ? 'bg-white text-fb-blue shadow-fb' : 'text-fb-text-secondary hover:text-fb-text'
                 }`}
               >
                 {type === 'biweekly' ? 'Bi-Weekly' : type.charAt(0).toUpperCase() + type.slice(1)}
@@ -138,23 +138,23 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         </div>
 
         {periodType === 'custom' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Start Date</label>
+              <label className="mb-1 block text-xs font-bold text-fb-text-secondary">Start Date</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={e => setStartDate(e.target.value)}
-                className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                className="block w-full rounded-xl border border-fb-input-border bg-fb-bg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-fb-text-secondary mb-1">End Date</label>
+              <label className="mb-1 block text-xs font-bold text-fb-text-secondary">End Date</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={e => setEndDate(e.target.value)}
-                className="block w-full px-3 py-2 text-sm bg-fb-bg border border-fb-input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
+                className="block w-full rounded-xl border border-fb-input-border bg-fb-bg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
               />
             </div>
           </div>
@@ -163,13 +163,13 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         {/* Job Filter */}
         {jobs.length > 0 && (
           <div>
-            <label className="block text-xs font-semibold text-fb-text-secondary mb-1.5 uppercase tracking-wide">Filter by Job</label>
-            <div className="flex flex-wrap gap-1.5">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.16em] text-fb-text-secondary">Filter by Job</label>
+            <div className="flex flex-wrap gap-2">
               {jobs.map(job => (
                 <button
                   key={job.id}
                   onClick={() => toggleJobFilter(job.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all ${
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition ${
                     selectedJobIds.includes(job.id)
                       ? 'border-transparent text-white'
                       : 'border-fb-divider text-fb-text-secondary bg-white hover:bg-fb-bg'
@@ -184,7 +184,6 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
           </div>
         )}
 
-        {/* Options */}
         <div className="flex flex-wrap gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -193,7 +192,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
               onChange={e => setIncludeTasks(e.target.checked)}
               className="w-4 h-4 rounded border-fb-divider text-fb-blue focus:ring-fb-blue"
             />
-            <span className="text-xs font-semibold text-fb-text-secondary">Include Tasks</span>
+            <span className="text-xs font-bold text-fb-text-secondary">Include Tasks</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -202,39 +201,38 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
               onChange={e => setIncludePhotos(e.target.checked)}
               className="w-4 h-4 rounded border-fb-divider text-fb-blue focus:ring-fb-blue"
             />
-            <span className="text-xs font-semibold text-fb-text-secondary">Include Photos</span>
+            <span className="text-xs font-bold text-fb-text-secondary">Include Photos</span>
           </label>
         </div>
 
-        {/* Preview Summary */}
-        <div className="p-4 bg-gradient-to-br from-fb-bg to-red-50 rounded-lg border border-fb-divider">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold text-fb-text-secondary">
+        <div className="rounded-2xl border border-fb-divider bg-gradient-to-br from-fb-bg to-sky-50 p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-xs font-bold text-fb-text-secondary">
               {computedStart.toLocaleDateString()} — {computedEnd.toLocaleDateString()}
             </p>
-            <span className="text-xs font-semibold text-fb-text-tertiary">
+            <span className="text-xs font-bold text-fb-text-tertiary">
               {filteredEntries.length} entries
             </span>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-white rounded-lg">
+            <div className="rounded-xl bg-white p-3">
               <p className="text-xs text-fb-text-tertiary">Total Hours</p>
-              <p className="text-xl font-bold text-fb-text">{summary.totalHours.toFixed(1)}</p>
+              <p className="text-2xl font-extrabold text-fb-text">{summary.totalHours.toFixed(1)}</p>
             </div>
-            <div className="p-3 bg-white rounded-lg">
+            <div className="rounded-xl bg-white p-3">
               <p className="text-xs text-fb-text-tertiary">Total Pay</p>
-              <p className="text-xl font-bold text-fb-green">${summary.totalPay.toFixed(2)}</p>
+              <p className="text-2xl font-extrabold text-fb-green">${summary.totalPay.toFixed(2)}</p>
             </div>
           </div>
 
           {Object.keys(summary.byProject).length > 0 && (
             <div className="mt-3 space-y-1.5">
               {Object.entries(summary.byProject).map(([name, data]: [string, { hours: number; pay: number; entries: number }]) => (
-                <div key={name} className="flex items-center justify-between text-xs p-2 bg-white rounded-lg">
-                  <span className="font-semibold text-fb-text">{name}</span>
+                <div key={name} className="flex items-center justify-between rounded-lg bg-white p-2 text-xs">
+                  <span className="font-bold text-fb-text">{name}</span>
                   <div className="flex gap-3">
                     <span className="text-fb-text-secondary">{data.hours.toFixed(1)} hrs</span>
-                    <span className="font-semibold text-fb-green">${data.pay.toFixed(2)}</span>
+                    <span className="font-bold text-fb-green">${data.pay.toFixed(2)}</span>
                   </div>
                 </div>
               ))}
@@ -242,11 +240,10 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
           )}
         </div>
 
-        {/* Generate Button */}
         <button
           onClick={handleGenerate}
           disabled={filteredEntries.length === 0 || isGenerating}
-          className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-white bg-fb-blue rounded-lg hover:bg-fb-blue-hover transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-fb-blue to-fb-blue-dark px-4 py-3 text-sm font-extrabold text-white shadow-fb transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
