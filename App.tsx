@@ -538,7 +538,7 @@ const App: React.FC = () => {
                       <div key={task.id} className="rounded-2xl border border-fb-divider bg-white p-3 shadow-fb">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <p className={`text-sm font-bold ${task.status === 'completed' ? 'text-fb-text-tertiary line-through' : 'text-fb-text'}`}>{task.title}</p>
+                            <p className={`truncate text-sm font-bold ${task.status === 'completed' ? 'text-fb-text-tertiary line-through' : 'text-fb-text'}`}>{task.title}</p>
                             <div className="mt-2 flex flex-wrap items-center gap-2">
                               <span className={`rounded-full px-2 py-1 text-[11px] font-bold ${statusMeta.badgeClassName}`}>{statusMeta.label}</span>
                               {task.photos.length > 0 && (
@@ -699,7 +699,6 @@ const App: React.FC = () => {
                     className="block w-full rounded-xl border border-fb-input-border bg-fb-bg px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fb-blue"
                     required
                   >
-                    <option value="" disabled>Select a job…</option>
                     {jobs.map((job) => (
                       <option key={job.id} value={job.id}>
                         {job.name}
