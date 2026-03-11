@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>RFE Field OS</title>
 
     <!-- PWA Meta Tags -->
@@ -88,19 +88,15 @@
       @media (max-width: 767px) {
         .pb-16 { padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)); }
       }
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
     </style>
 
 </head>
   <body class="bg-fb-bg font-fb overscroll-none" style="color-scheme: light;">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
-    <script>
-      // Register Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
-      }
-    </script>
+
   </body>
 </html>
