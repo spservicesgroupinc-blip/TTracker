@@ -311,16 +311,29 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                       {onSelectJob && (
                         <button
                           onClick={() => onSelectJob(job.id)}
-                          className="px-3 py-2 rounded-lg bg-fb-blue text-sm font-semibold text-white hover:bg-fb-blue-hover transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-fb-blue text-sm font-semibold text-white hover:bg-fb-blue-hover active:scale-[0.97] transition-all"
                         >
-                          Use On Clock Screen
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Use on Clock
                         </button>
                       )}
                       <button
                         onClick={() => setShowAddTask(showAddTask === job.id ? null : job.id)}
-                        className="px-3 py-2 rounded-lg bg-white border border-fb-divider text-sm font-semibold text-fb-text-secondary hover:bg-fb-active-bg transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white border border-fb-divider text-sm font-semibold text-fb-text-secondary hover:bg-fb-active-bg active:scale-[0.97] transition-all"
                       >
+                        <PlusIcon />
                         Add Task
+                      </button>
+                      <button
+                        onClick={() => handleDeleteJob(job.id)}
+                        className="ml-auto inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white border border-red-100 text-sm font-semibold text-fb-red hover:bg-red-50 active:scale-[0.97] transition-all"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
                       </button>
                     </div>
 
@@ -328,11 +341,12 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
 
                     {showAddTask === job.id && (
                       <form onSubmit={(e) => handleAddTask(job.id, e)} className="p-3 bg-white rounded-xl border border-fb-divider space-y-2">
+                        <label className="block text-xs font-bold uppercase tracking-wide text-fb-text-secondary mb-1">New Task</label>
                         <input
                           type="text"
                           value={taskTitle}
                           onChange={(e) => setTaskTitle(e.target.value)}
-                          placeholder="Task name..."
+                          placeholder="e.g., Install junction box"
                           className="block w-full px-3 py-3 text-sm bg-fb-bg border border-fb-input-border rounded-xl focus:outline-none focus:ring-2 focus:ring-fb-blue transition-colors"
                           required
                           autoFocus
@@ -344,16 +358,16 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                               setShowAddTask(null);
                               setTaskTitle('');
                             }}
-                            className="px-3 py-2.5 text-xs font-semibold text-fb-text-secondary bg-fb-active-bg rounded-lg"
+                            className="px-4 py-2.5 text-sm font-semibold text-fb-text-secondary bg-fb-active-bg rounded-xl"
                           >
                             Cancel
                           </button>
                           <button
                             type="submit"
                             disabled={!taskTitle.trim()}
-                            className="px-3 py-2.5 text-xs font-bold text-white bg-fb-blue rounded-lg disabled:opacity-40"
+                            className="px-4 py-2.5 text-sm font-bold text-white bg-fb-blue rounded-xl disabled:opacity-40"
                           >
-                            Save Task
+                            Add Task
                           </button>
                         </div>
                       </form>
@@ -361,9 +375,13 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
 
                     <div className="space-y-2">
                       {sortedTasks.length === 0 ? (
-                        <div className="rounded-xl bg-white border border-dashed border-fb-divider px-4 py-5 text-center text-sm text-fb-text-tertiary">
-                          No tasks yet. Add one to start the checklist.
-                        </div>
+                        <button
+                          onClick={() => setShowAddTask(job.id)}
+                          className="w-full rounded-xl bg-white border border-dashed border-fb-divider px-4 py-5 text-center hover:border-fb-blue hover:bg-fb-hover-bg transition-colors"
+                        >
+                          <p className="text-sm font-semibold text-fb-text-secondary">No tasks yet</p>
+                          <p className="text-xs text-fb-text-tertiary mt-0.5">Tap to add the first task</p>
+                        </button>
                       ) : (
                         sortedTasks.map((task) => {
                           const statusMeta = getTaskStatusMeta(task.status);
@@ -402,13 +420,13 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                                 <div className="flex items-center gap-2">
                                   <button
                                     onClick={() => handleSetTaskStatus(job.id, task.id, statusMeta.nextStatus)}
-                                    className={`flex-1 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${statusMeta.buttonClassName}`}
+                                    className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all active:scale-[0.97] ${statusMeta.buttonClassName}`}
                                   >
                                     {statusMeta.buttonLabel}
                                   </button>
                                   <button
                                     onClick={() => setExpandedTaskPhotos(showPhotos ? null : task.id)}
-                                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
+                                    className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
                                       showPhotos || task.photos.length > 0
                                         ? 'text-fb-blue bg-blue-50'
                                         : 'text-fb-text-secondary bg-fb-bg hover:bg-fb-active-bg'
@@ -433,15 +451,6 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
                           );
                         })
                       )}
-                    </div>
-
-                    <div className="flex justify-end">
-                      <button
-                        onClick={() => handleDeleteJob(job.id)}
-                        className="text-xs font-semibold text-fb-red hover:underline"
-                      >
-                        Delete Job
-                      </button>
                     </div>
                   </div>
                 )}
