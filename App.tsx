@@ -106,6 +106,7 @@ const App: React.FC = () => {
   const [now, setNow] = useState(Date.now());
   const [showCompletedTasks, setShowCompletedTasks] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [activeComposer, setActiveComposer] = useState<ComposerType>(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskJobId, setNewTaskJobId] = useState('');
@@ -136,6 +137,17 @@ const App: React.FC = () => {
       setSelectedJobId(activeEntry.jobId);
     }
   }, [jobs, selectedJobId, activeEntry]);
+
+  useEffect(() => {
+    const goOffline = () => setIsOffline(true);
+    const goOnline = () => setIsOffline(false);
+    window.addEventListener('offline', goOffline);
+    window.addEventListener('online', goOnline);
+    return () => {
+      window.removeEventListener('offline', goOffline);
+      window.removeEventListener('online', goOnline);
+    };
+  }, []);
 
   const selectedJob = useMemo(() => {
     if (selectedJobId !== 'general') {
@@ -209,7 +221,14 @@ const App: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const location: Coordinates = await getCurrentPosition();
+      let location: Coordinates | undefined;
+      try {
+        location = await getCurrentPosition();
+      } catch {
+        // Allow clock in/out without location when offline or GPS unavailable
+        location = undefined;
+      }
+
       if (isClockedIn && activeEntry) {
         const updatedEntry: TimeEntry = {
           ...activeEntry,
@@ -227,8 +246,12 @@ const App: React.FC = () => {
         };
         setTimeEntries([...timeEntries, newEntry]);
       }
+
+      if (!location) {
+        setError('Clocked ' + (isClockedIn ? 'out' : 'in') + ' without GPS — location unavailable.');
+      }
     } catch (err: any) {
-      setError(err.message || 'Unable to get your location.');
+      setError(err.message || 'Unable to clock in.');
     } finally {
       setIsLoading(false);
     }
@@ -313,7 +336,12 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen text-fb-text font-fb pb-24 md:pb-8">
+    <div className="min-h-screen bg-white text-fb-text font-fb pb-24 md:pb-8">
+      {isOffline && (
+        <div className="bg-amber-500 px-4 py-2 text-center text-xs font-bold text-white">
+          You're offline — data is saved locally and will sync when you reconnect.
+        </div>
+      )}
       <header className="sticky top-0 z-40 border-b border-fb-divider bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-3">
@@ -365,12 +393,12 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 animate-fade-rise">
+      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8 animate-fade-rise">
         {activeTab === 'clock' && (
-          <section className="grid gap-4 lg:grid-cols-[1.25fr,0.95fr]">
-            <div className="space-y-4">
-              <div className="overflow-hidden rounded-3xl border border-fb-divider bg-white shadow-fb-lg">
-                <div className="grid gap-4 p-4 sm:p-6 md:grid-cols-[1fr,auto] md:items-center">
+          <section className="space-y-0">
+            <div>
+              <div>
+                <div className="grid gap-4 py-4 sm:py-6 md:grid-cols-[1fr,auto] md:items-center">
                   <div className="space-y-4">
                     <div className="inline-flex items-center gap-2 rounded-full bg-fb-bg px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-fb-text-secondary">
                       <span className={`h-2 w-2 rounded-full ${isClockedIn ? 'animate-pulse bg-fb-green' : 'bg-fb-text-tertiary'}`} />
@@ -398,10 +426,10 @@ const App: React.FC = () => {
                     </span>
                   </button>
                 </div>
-                {error && <p className="border-t border-red-100 bg-red-50 px-4 py-3 text-sm text-fb-red">{error}</p>}
+                {error && <p className="bg-red-50 px-4 py-3 text-sm text-fb-red">{error}</p>}
               </div>
 
-              <div className="rounded-3xl border border-fb-divider bg-white shadow-fb p-4 sm:p-5">
+              <div className="border-t border-fb-divider py-4 sm:py-5">
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.2em] text-fb-text-tertiary">Active Job</p>
@@ -446,7 +474,7 @@ const App: React.FC = () => {
                         <span>Checklist progress</span>
                         <span>{completedTaskCount}/{selectedJob.tasks.length || 0}</span>
                       </div>
-                      <div className="h-2.5 overflow-hidden rounded-full bg-white">
+                      <div className="h-2.5 overflow-hidden rounded-full bg-fb-bg">
                         <div className="h-full rounded-full bg-gradient-to-r from-fb-blue to-sky-400" style={{ width: `${selectedJobProgress}%` }} />
                       </div>
                     </div>
@@ -463,8 +491,8 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-fb-divider bg-white shadow-fb overflow-hidden">
-              <div className="flex items-center justify-between border-b border-fb-divider px-4 py-4 sm:px-5">
+            <div className="border-t border-fb-divider">
+              <div className="flex items-center justify-between py-4 sm:py-5">
                 <div>
                   <h2 className="font-display text-lg font-extrabold text-fb-text">Mission Checklist</h2>
                   <p className="text-xs font-medium text-fb-text-tertiary">
@@ -481,7 +509,7 @@ const App: React.FC = () => {
                 )}
               </div>
 
-              <div className="space-y-3 p-4 sm:p-5">
+              <div className="space-y-3 py-3 sm:py-4">
                 {!selectedJob && (
                   <div className="rounded-2xl border border-fb-divider bg-fb-bg px-4 py-6 text-center">
                     <p className="text-sm font-bold text-fb-text">Pick a job to unlock the checklist</p>

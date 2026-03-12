@@ -1,16 +1,20 @@
-const CACHE_NAME = 'rfe-tracker-v1';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'rfe-tracker-v3';
+const FONT_CACHE_NAME = 'rfe-fonts-v1';
+const PRECACHE_ASSETS = [
   '/',
   '/index.html',
+  '/manifest.json',
   '/icon.svg',
-  '/manifest.json'
+  '/icon-180.png',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
-// Install: precache essential assets
+// Install: precache shell assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
+      return cache.addAll(PRECACHE_ASSETS);
     })
   );
   self.skipWaiting();
@@ -18,11 +22,12 @@ self.addEventListener('install', (event) => {
 
 // Activate: clean up old caches
 self.addEventListener('activate', (event) => {
+  const currentCaches = [CACHE_NAME, FONT_CACHE_NAME];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => !currentCaches.includes(name))
           .map((name) => caches.delete(name))
       );
     })
@@ -30,17 +35,35 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: network-first for navigation, cache-first for assets
+// Fetch: network-first for navigation, cache-first for hashed assets, network-first for others
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
-  // Skip cross-origin requests (CDN scripts, etc.)
+  // Google Fonts: cache-first (font files are immutable, CSS changes rarely)
+  if (request.url.startsWith('https://fonts.googleapis.com') ||
+      request.url.startsWith('https://fonts.gstatic.com')) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(FONT_CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        }).catch(() => cached || new Response('', { status: 408 }));
+      })
+    );
+    return;
+  }
+
+  // Skip other cross-origin requests
   if (!request.url.startsWith(self.location.origin)) return;
 
-  // Navigation requests: network first, fallback to cache
+  // Navigation requests: network-first with offline fallback
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
@@ -54,17 +77,34 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache first, fallback to network
+  // Hashed assets (Vite build output like /assets/index-abc123.js):
+  // These are immutable — cache-first is safe and fast
+  if (request.url.includes('/assets/')) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+
+  // Everything else: network-first with cache fallback
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request).then((response) => {
+    fetch(request)
+      .then((response) => {
         if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }
         return response;
-      });
-    })
+      })
+      .catch(() => caches.match(request))
   );
 });

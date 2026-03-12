@@ -110,8 +110,8 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
   };
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-fb-divider bg-fb-card shadow-fb-lg">
-      <div className="border-b border-fb-divider bg-gradient-to-r from-fb-blue to-fb-blue-dark px-4 py-4 text-white sm:px-6">
+    <div>
+      <div className="-mx-4 sm:-mx-6 lg:-mx-8 border-b border-fb-divider bg-gradient-to-r from-fb-blue to-fb-blue-dark px-4 py-4 text-white sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <h2 className="font-display text-lg font-extrabold">Premium Pay Report</h2>
           <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">Pro</span>
@@ -119,7 +119,7 @@ const PremiumReport: React.FC<PremiumReportProps> = ({ profile, timeEntries, job
         <p className="mt-1 text-xs font-medium text-white/85">Generate polished PDF payroll reports with optional task and photo evidence.</p>
       </div>
 
-      <div className="space-y-5 p-4 sm:p-6">
+      <div className="space-y-5 py-5">
         <div>
           <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.16em] text-fb-text-secondary">Report Period</label>
           <div className="grid grid-cols-2 gap-1 rounded-xl bg-fb-bg p-1 sm:grid-cols-4">

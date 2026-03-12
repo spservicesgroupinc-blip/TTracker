@@ -1,12 +1,12 @@
 {
-  "name": "RFE Time Tracker",
-  "short_name": "RFE Tracker",
+  "name": "RFE Field OS",
+  "short_name": "RFE Field OS",
   "description": "RFE Foam Equipment — Track your work hours with GPS location verification. Clock in/out, manage projects & jobs, and generate professional pay reports.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#F0F0F0",
-  "theme_color": "#CC0000",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0E5FD8",
   "orientation": "any",
   "id": "/",
   "categories": ["productivity", "business", "utilities"],
@@ -18,32 +18,34 @@
       "purpose": "any"
     },
     {
+      "src": "/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "form_factor": "wide",
-      "label": "RFE Time Tracker on Desktop"
+      "purpose": "any"
     },
     {
-      "src": "/icon.svg",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "form_factor": "narrow",
-      "label": "RFE Time Tracker on Mobile"
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

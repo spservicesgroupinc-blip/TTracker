@@ -168,8 +168,8 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-3xl border border-fb-divider bg-fb-card shadow-fb-lg">
-        <div className="flex items-start justify-between gap-3 border-b border-fb-divider px-4 py-4 sm:px-5">
+      <div>
+        <div className="flex items-start justify-between gap-3 border-b border-fb-divider pb-4">
           <div>
             <h2 className="font-display text-lg font-extrabold text-fb-text">Jobs & Tasks</h2>
             <p className="mt-0.5 text-xs font-medium text-fb-text-tertiary">Open a job to manage scope, checklist states, and photo evidence.</p>
@@ -183,7 +183,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
         </div>
 
         {showCreateJob && (
-          <div className="border-b border-fb-divider bg-fb-bg p-4">
+          <div className="border-b border-fb-divider bg-fb-bg rounded-2xl p-4 mt-4">
             <form onSubmit={handleCreateJob} className="space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-fb-text-secondary mb-1">Job Name *</label>
@@ -242,7 +242,7 @@ const JobManager: React.FC<JobManagerProps> = ({ jobs, onJobsChange, selectedJob
       </div>
 
       {jobs.length === 0 ? (
-        <div className="rounded-3xl border border-fb-divider bg-fb-card px-6 py-12 text-center shadow-fb">
+        <div className="px-6 py-12 text-center">
           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-fb-bg flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-fb-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.193 23.193 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
